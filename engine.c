@@ -922,6 +922,14 @@ static void react_to_sig_manager(struct json_object *interface,
 			sub_array = json_object_array_get_idx(serv_to_add, i);
 			serv_dict = json_object_array_get_idx(sub_array, 1);
 
+			if (!serv_dict) {
+				continue;
+			}
+
+			if (json_object_get_type(serv_dict) != json_type_array) {
+				continue;
+			}
+
 			// if the service have been "modified"
 			if (json_object_array_length(serv_dict)) {
 				tmp_str = json_object_get_string(
