@@ -1,5 +1,0 @@
-connman-curses-git (1:999999999999+git) UNRELEASED; urgency=medium
-
-  * git build
-
- -- Javier López <m@javier.io>  Mon, 21 Jan 2015 09:21:13 +0200

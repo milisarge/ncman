@@ -21,3 +21,4 @@ test_agent.c
 .gdb_history
 tags
 peda*
+build/
