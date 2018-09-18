@@ -18,12 +18,18 @@ Rewritten from https://github.com/eurogiciel-oss/connman-json-client, which was 
 
 ### Build steps
 
-In the project dir, type
+To build ncman, in the project dir, type
 ```sh
-$ meson
 $ mkdir build
 $ cd build
+$ meson
 $ ninja
 ```
+
+To run test, simply run this command after running above
+```sh
+$ ninja test
+```
+
 ### License
 GPLv2
