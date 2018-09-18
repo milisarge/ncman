@@ -7,6 +7,7 @@ Rewritten from https://github.com/eurogiciel-oss/connman-json-client, which was 
 - [ ] Color support
 - [x] Better build-system
 - [ ] Better code-readability
+- [ ] Better key-binding support
 
 ## Build
 ### Dependencies
