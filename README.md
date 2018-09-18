@@ -1,13 +1,29 @@
-# connman-ncurses
+# ncman
 
 This project aim to provide a simple ncurses interface to control ConnMan through
-dbus. Wiki: https://github.com/eurogiciel-oss/connman-json-client/wiki
+dbus.
 
-It's based on connmanctl, the official command line client for ConnMan.
-ConnMan's home page: https://connman.net
+Rewritten from https://github.com/eurogiciel-oss/connman-json-client, which was unmaintained for years. This fork aims for some good batteries, including:
+- [ ] Color support
+- [x] Better build-system
+- [ ] Better code-readability
 
 ## Build
+### Dependencies
+* meson
+* gcc
+* ncurses
+* json-c
+* dbus
 
-Building the project is as straight forward as running `run-me.sh`.
-You will need development packages for dbus, ncurses and libjson and of course
-autotools.
+### Build steps
+
+In the project dir, type
+```sh
+$ meson
+$ mkdir build
+$ cd build
+$ ninja
+```
+### License
+GPLv2
