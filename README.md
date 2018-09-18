@@ -31,5 +31,5 @@ To run test, simply run this command after running above
 $ ninja test
 ```
 
-### License
+## License
 GPLv2
