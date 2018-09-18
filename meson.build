@@ -19,8 +19,8 @@ build_dependencies = [dbus, ncurses, json, formw, menuw]
 
 ## flags
 flags = [
- '-Wall'
- #  '-Wextra'
+ '-Wall',
+ '-Wextra'
 ]
 
 ## defines
@@ -51,8 +51,11 @@ sources = files(
   'src/string_utils.c'
 )
 
+inc = include_directories('inc')
+
 executable('ncman', 
   sources,
   dependencies: build_dependencies,
-  c_args: defines + flags)
+  c_args: defines + flags,
+  include_directories: inc)
 
