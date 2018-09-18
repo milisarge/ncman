@@ -10,8 +10,8 @@ Rewritten from https://github.com/eurogiciel-oss/connman-json-client, which was 
 
 ## Build
 ### Dependencies
-* meson
-* gcc
+* meson (build)
+* gcc (build)
 * ncurses
 * json-c
 * dbus
