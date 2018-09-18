@@ -19,8 +19,7 @@ build_dependencies = [dbus, ncurses, json, formw, menuw]
 
 ## flags
 flags = [
- '-Wall',
- '-Wextra'
+ '-Wall'
 ]
 
 ## defines
@@ -53,9 +52,27 @@ sources = files(
 
 inc = include_directories('inc')
 
-executable('ncman', 
+executable(
+  'ncman', 
   sources,
   dependencies: build_dependencies,
   c_args: defines + flags,
-  include_directories: inc)
+  include_directories: inc
+)
 
+#t1 = executable(
+#  'test_json_utils',
+#  files('test/test_json_utils.c', 'src/json_utils.c', 'src/keys.c'),
+#  dependencies: build_dependencies,
+#  include_directories: inc
+#)
+
+t2 = executable(
+  'test_regexp',
+  files('test/test_regexp.c', 'src/json_utils.c', 'src/keys.c'),
+  dependencies: build_dependencies,
+  include_directories: inc
+)
+
+#test('Json utilities', t1)
+test('Json regexp', t2)
