@@ -1568,9 +1568,15 @@ int main(int argc, char *argv[])
 			print_version();
 			exit(0);
 	}
+
 	/*
-	 * set up things and go to the loop
+	 * check if the stdout a terminal or not
 	 */
+	if (!isatty(1)) {
+		fprintf(stderr ,"[-] stdout is not a terminal, halted!\n");
+		return -1;
+	}
+
 	struct sigaction sig_int, sig_winch;
 
 	if (engine_init() < 0)
