@@ -2,6 +2,7 @@
  *  connman-ncurses
  *
  *  Copyright (C) 2014 Eurogiciel. All rights reserved.
+ *  Copyright (C) 2018 l4rzy
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +28,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
 #include <dbus/dbus.h>
 #include <signal.h>
 #include <assert.h>
@@ -100,6 +102,15 @@ static struct {
 		print_services_for_tech }, // CONTEXT_SERVICES
 	{ NULL, __renderers_free_service_config, print_services_for_tech,
 		get_service_settings }, // CONTEXT_SERVICE_CONFIG_STANDALONE
+};
+
+/*
+ * options
+ */
+static struct option nc_option[] = {
+	{"help", 0, NULL, 'h'},
+	{"version", 0, NULL, 'v'},
+	{NULL, 0, NULL, 0}
 };
 
 /*
@@ -1528,11 +1539,38 @@ void ncurses_action(void)
 	wrefresh(win_body);
 }
 
+void print_help(char *prog) {
+	printf("ncman - a frontend to connman\n"
+		   "--\n"
+		   "Usage: %s [option]\n"
+		   "\n"
+		   "Options:\n"
+		   "    -h    --help        print this help\n"
+		   "    -v    --version     show program version\n", prog);
+}
+
+void print_version() {
+	printf("ncman v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+}
+
 /*
  * Initialize everything, run the loop then terminate everything.
  */
-int main(void)
+int main(int argc, char *argv[])
 {
+	int flag = getopt_long(argc, argv, "hv", nc_option, NULL);
+	switch (flag) {
+		case 'h':
+			print_help(argv[0]);
+			exit(0);
+
+		case 'v':
+			print_version();
+			exit(0);
+	}
+	/*
+	 * set up things and go to the loop
+	 */
 	struct sigaction sig_int, sig_winch;
 
 	if (engine_init() < 0)
