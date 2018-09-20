@@ -12,7 +12,7 @@ cc = meson.get_compiler('c')
 ## libs
 dbus =		  dependency('dbus-1')
 json =		  dependency('json-c')
-ncurses =	  dependency('ncurses')
+ncurses =	  dependency('ncursesw')
 formw =		  dependency('formw')
 menuw =		  dependency('menuw')
 build_dependencies = [dbus, ncurses, json, formw, menuw]
