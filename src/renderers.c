@@ -2,6 +2,7 @@
  *  connman-ncurses
  *
  *  Copyright (C) 2014 Eurogiciel. All rights reserved.
+ *  Copyright (C) 2018 l4rzy
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -56,7 +57,7 @@ static int cur_y, cur_x;
  * Windows (ncurses term) used,
 
  +-----------------------------------+
- |  win_header                       | <-- state area
+ |  win_header (optional)            | <-- state area
  +-----------------------------------+
  |                                   |
  |                                   |
@@ -237,7 +238,7 @@ void __renderers_state(struct json_object *jobj)
 	state_str = json_object_get_string(state);
 	json_object_object_get_ex(jobj, "OfflineMode", &offline_mode);
 
-	mvwprintw(win_header, 0, 1, "Connman ncurses UI");
+	mvwprintw(win_header, 0, 1, "ncman");
 	// 38 = len(string) + 1
 	mvwprintw(win_header, 0, COLS-38, "State: %-6s%-6sOfflineMode: %-5s\n",
 			state_str, "", json_object_get_string(offline_mode));
