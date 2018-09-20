@@ -32,6 +32,7 @@
 #include <dbus/dbus.h>
 #include <signal.h>
 #include <assert.h>
+#include <locale.h>
 
 #include "engine.h"
 #include "loop.h"
@@ -1576,6 +1577,8 @@ int main(int argc, char *argv[])
 		fprintf(stderr ,"[-] stdout is not a terminal, halted!\n");
 		return -1;
 	}
+
+	setlocale(LC_ALL, "");
 
 	struct sigaction sig_int, sig_winch;
 
