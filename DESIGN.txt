@@ -1,0 +1,32 @@
+========= main screen ========
+[+] contains 2 windows: body and footer, in which body has a border around it
+  => the top border should look like this
+	```
+	┌─[ncman v0.1]────────────────────────────[online/offline]─────[signal]─┐
+	│                                                                       │
+	│    Technology        Name             Powered            Connected    │
+	│                                                                       │
+	│    p2p               P2P              false              false        │
+	│    wifi              WiFi             true               true         │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	│                                                                       │
+	└───────────────────────────────────────────────────────────────────────┘
+	 [INFO] Connected to FREEDOM DiVE
+
+Accept `:`, which switches to command mode
+
+========= scan & connect ========
+
