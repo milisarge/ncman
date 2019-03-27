@@ -1,32 +1,53 @@
 ========= main screen ========
+[+] mimimum dimension is 80x24 (width x height)
 [+] contains 2 windows: body and footer, in which body has a border around it
   => the top border should look like this
-	```
-	┌─[ncman v0.1]────────────────────────────[online/offline]─────[signal]─┐
-	│                                                                       │
-	│    Technology        Name             Powered            Connected    │
-	│                                                                       │
-	│    p2p               P2P              false              false        │
-	│    wifi              WiFi             true               true         │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	│                                                                       │
-	└───────────────────────────────────────────────────────────────────────┘
-	 [INFO] Connected to FREEDOM DiVE
+    ```
+  ┌─[summary]───────────────────────────────[online/offline]─────[signal]─┐
+  │                                                                       │
+  │    Technology        Name             Powered            Connected    │
+  │                                                                       │
+  │    p2p               P2P              false              false        │
+  │    wifi              WiFi             true               true         │
+  │    ethernet          Wired            true               false        │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  │                                                                       │
+  └───────────────────────────────────────────────────────────────────────┘
+   [INFO] Connected to `AccessPoint 010010`
+
+[+] Footer
+    The footer shows info after changing something, and show hint in idle
+     [HINT] Type `i` to open details
+
+[+] Key binding
+    `hjkl` as well as navi keys to navigate
+    `q` to quit
+    `i` to enter interface config mode
+    `o` to toggle offline/online
+    `p` to toggle power
 
 Accept `:`, which switches to command mode
+  => The bottom border should have a 
 
 ========= scan & connect ========
+
+
+========= details =========
+[+] Key binding
+    `hjkl` to navigate
+    `i` to edit
+    `ESC` to back to navigate
+    `:w` to save and apply
 
