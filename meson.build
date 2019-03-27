@@ -1,4 +1,3 @@
-
 project('ncman', 'c',
   version: '0.0.1',
   meson_version: '>=0.43',
@@ -55,6 +54,7 @@ inc = include_directories('inc')
 executable(
   'ncman', 
   sources,
+  install: true,
   dependencies: build_dependencies,
   c_args: defines + flags,
   include_directories: inc
