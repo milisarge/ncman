@@ -29,9 +29,9 @@ extern "C" {
 bool __match_strings(const char *str, const char *trusted);
 
 bool __json_type_dispatch(struct json_object *jobj,
-		struct json_object *jtrusted);
+                          struct json_object *jtrusted);
 
-const char* __json_get_command_str(struct json_object *jobj);
+const char *__json_get_command_str(struct json_object *jobj);
 
 #ifdef __cplusplus
 }

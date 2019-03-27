@@ -46,15 +46,11 @@ int ui_initialize() {
 	if (LINES < UI_MINIMUM_LINES || COLS < UI_MINIMUM_COLS) {
 		return;
 	}
-
-	win_body = newwin(LINES-1, COLS, 0, 0);
-	win_footer = newwin(1, COLS, LINES-1, 0);
-
+	win_body = newwin(LINES - 1, COLS, 0, 0);
+	win_footer = newwin(1, COLS, LINES - 1, 0);
 	if (!win_body && !win_footer) {
 		return;
 	}
-
-
 }
 
 static void ui_get_size(int *l, int *c) {
@@ -63,10 +59,9 @@ static void ui_get_size(int *l, int *c) {
 
 bool ui_size_ok(void) {
 	int l, c;
-
 	ui_get_size(&l, &c);
 	if (h < UI_MINIMUM_ ||
-			w < UI_MINIMUM_SIZE_W) {
+	        w < UI_MINIMUM_SIZE_W) {
 		return false;
 	}
 	return true;

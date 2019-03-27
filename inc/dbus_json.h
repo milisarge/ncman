@@ -26,10 +26,10 @@
 extern "C" {
 #endif
 
-struct json_object* dbus_to_json(DBusMessageIter *iter);
+struct json_object *dbus_to_json(DBusMessageIter *iter);
 
 int json_to_dbus_dict(struct json_object *jobj,
-		DBusMessageIter *dict);
+                      DBusMessageIter *dict);
 
 #ifdef __cplusplus
 }

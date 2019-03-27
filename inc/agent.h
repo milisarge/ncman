@@ -40,7 +40,8 @@ struct agent_data {
 
 struct agent_data;
 
-extern void (*agent_callback)(struct json_object *data, struct agent_data *request);
+extern void (*agent_callback)(struct json_object *data,
+                              struct agent_data *request);
 extern void (*agent_error_callback)(struct json_object *data);
 
 int agent_register(DBusConnection *connection);
@@ -50,7 +51,7 @@ void agent_unregister(DBusConnection *connection, void *user_data);
 void report_error_return(struct json_object *retry, struct agent_data *request);
 
 int json_to_agent_response(struct json_object *jobj,
-		struct agent_data *request);
+                           struct agent_data *request);
 
 #ifdef __cplusplus
 }

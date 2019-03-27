@@ -35,7 +35,7 @@ struct popup_actions {
 };
 
 void popup_new(int rows, int cols, int posy, int posx, char **requests,
-		char *title);
+               char *title);
 
 void popup_delete(void);
 

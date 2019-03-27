@@ -108,18 +108,16 @@ static char str_field[2];
 /*
  * This is useful to mark main_fields with a value for repos_cursor
  */
-static char* get_str_key() {
+static char *get_str_key() {
 	int cur_ch;
 	cur_ch = str_field[0];
-
-	if (cur_ch == '\0')
+	if (cur_ch == '\0') {
 		cur_ch = 'a';
-	else
+	} else {
 		cur_ch++;
-
+	}
 	str_field[0] = cur_ch;
 	str_field[1] = '\0';
-
 	return str_field;
 }
 
@@ -149,8 +147,7 @@ static char* get_str_key() {
 	 ]
  ]
  */
-static void renderers_technologies(struct json_object *jobj)
-{
+static void renderers_technologies(struct json_object *jobj) {
 	int i;
 	char *desc_base = "%-20s Powered %-5s          Connected %-5s";
 	char desc_base_sub[30];
@@ -158,62 +155,50 @@ static void renderers_technologies(struct json_object *jobj)
 	char *desc, *tech_short_name;
 	struct json_object *sub_array, *dbus_tech_name, *tech_dict;
 	struct userptr_data *data;
-
 	nb_items = json_object_array_length(jobj);
-	main_items = malloc(sizeof(ITEM*) * (nb_items+1));
+	main_items = malloc(sizeof(ITEM *) * (nb_items + 1));
 	assert(main_items != NULL && nb_items > 0);
-
 	for (i = 0; i < nb_items; i++) {
 		sub_array = json_object_array_get_idx(jobj, i);
-
-		if (!sub_array)
+		if (!sub_array) {
 			continue;
-
+		}
 		dbus_tech_name = json_object_array_get_idx(sub_array, 0);
 		tech_dict = json_object_array_get_idx(sub_array, 1);
-
 		json_object_object_foreach(tech_dict, key, val) {
-
-			if (strcmp(key_serv_name, key) == 0)
+			if (strcmp(key_serv_name, key) == 0) {
 				k_name = json_object_get_string(val);
-
-			else if (strcmp("Type", key) == 0)
+			} else if (strcmp("Type", key) == 0) {
 				k_type = json_object_get_string(val);
-
-			else if (strcmp("Powered", key) == 0)
+			} else if (strcmp("Powered", key) == 0) {
 				k_powered = json_object_to_json_string(val);
-
-			else if (strcmp("Connected", key) == 0)
+			} else if (strcmp("Connected", key) == 0) {
 				k_connected = json_object_to_json_string(val);
+			}
 		}
-
 		snprintf(desc_base_sub, 30, "%s (%s)", k_name, k_type);
 		desc_base_sub[29] = '\0';
-
 		desc = malloc(RENDERERS_STRING_MAX_LEN);
 		assert(desc != NULL);
-		snprintf(desc, RENDERERS_STRING_MAX_LEN-1, desc_base,
-				desc_base_sub, k_powered, k_connected);
-		desc[RENDERERS_STRING_MAX_LEN-1] = '\0';
+		snprintf(desc, RENDERERS_STRING_MAX_LEN - 1, desc_base,
+		         desc_base_sub, k_powered, k_connected);
+		desc[RENDERERS_STRING_MAX_LEN - 1] = '\0';
 		tech_short_name =
-			extract_dbus_short_name(json_object_get_string(dbus_tech_name));
+		    extract_dbus_short_name(json_object_get_string(dbus_tech_name));
 		main_items[i] = new_item(tech_short_name, desc);
-
 		data = malloc(sizeof(struct userptr_data));
 		assert(data != NULL);
 		data->dbus_name = strdup(json_object_get_string(dbus_tech_name));
 		data->pretty_name = strdup(k_name);
 		set_item_userptr(main_items[i], data);
 	}
-
 	main_items[nb_items] = NULL;
 	main_menu = new_menu(main_items);
 	set_menu_win(main_menu, win_body);
-	set_menu_sub(main_menu, derwin(win_body, win_body_lines-2, COLS-4, 3, 2));
+	set_menu_sub(main_menu, derwin(win_body, win_body_lines - 2, COLS - 4, 3, 2));
 	set_menu_mark(main_menu, "");
-	set_menu_format(main_menu, win_body_lines-3, 1);
+	set_menu_format(main_menu, win_body_lines - 3, 1);
 	assert(post_menu(main_menu) == E_OK);
-
 	refresh_home_msg();
 	wrefresh(win_header);
 	wrefresh(win_body);
@@ -229,19 +214,16 @@ static void renderers_technologies(struct json_object *jobj)
 	 "SessionMode": false
  }
  */
-void __renderers_state(struct json_object *jobj)
-{
+void __renderers_state(struct json_object *jobj) {
 	struct json_object *state, *offline_mode;
 	const char *state_str;
-
 	json_object_object_get_ex(jobj, key_serv_state, &state);
 	state_str = json_object_get_string(state);
 	json_object_object_get_ex(jobj, "OfflineMode", &offline_mode);
-
 	mvwprintw(win_header, 0, 1, "ncman");
 	// 38 = len(string) + 1
-	mvwprintw(win_header, 0, COLS-38, "State: %-6s%-6sOfflineMode: %-5s\n",
-			state_str, "", json_object_get_string(offline_mode));
+	mvwprintw(win_header, 0, COLS - 38, "State: %-6s%-6sOfflineMode: %-5s\n",
+	          state_str, "", json_object_get_string(offline_mode));
 	redrawwin(win_header);
 	wrefresh(win_header);
 }
@@ -255,51 +237,40 @@ void __renderers_state(struct json_object *jobj)
 	key_state: { ... }
  }
  */
-void __renderers_home_page(struct json_object *jobj)
-{
+void __renderers_home_page(struct json_object *jobj) {
 	struct json_object *tech, *state;
-
 	json_object_object_get_ex(jobj, key_technologies, &tech);
 	json_object_object_get_ex(jobj, key_state, &state);
-
-	if (tech == NULL || state == NULL)
+	if (tech == NULL || state == NULL) {
 		return;
-
+	}
 	werase(win_body);
 	box(win_body, 0, 0);
 	mvwprintw(win_body, 1, 2, "Technologies:");
-
 	__renderers_state(state);
 	renderers_technologies(tech);
-
 	context.current_context = CONTEXT_HOME;
 }
 
 /*
  * Free the menu and items memory.
  */
-void __renderers_free_home_page(void)
-{
+void __renderers_free_home_page(void) {
 	int i;
 	struct userptr_data *data;
-
-	if (!main_menu)
+	if (!main_menu) {
 		return;
-
+	}
 	unpost_menu(main_menu);
-
 	for (i = 0; i < nb_items; i++) {
 		free((void *) main_items[i]->description.str);
 		free((void *) main_items[i]->name.str);
-
 		data = item_userptr(main_items[i]);
 		free((void *) data->dbus_name);
 		free((void *) data->pretty_name);
 		free(data);
-
 		free_item(main_items[i]);
 	}
-
 	free_menu(main_menu);
 	free(main_items);
 	nb_items = 0;
@@ -311,12 +282,9 @@ void __renderers_free_home_page(void)
  * Return true if jobj has a Connected attribute set to true, false otherwise.
  * @param jobj A json object service dict
  */
-static bool tech_is_connected(struct json_object *jobj)
-{
+static bool tech_is_connected(struct json_object *jobj) {
 	struct json_object *jbool;
-
 	json_object_object_get_ex(jobj, "Connected", &jbool);
-
 	return ((jbool && json_object_get_boolean(jbool)) ? true : false);
 }
 
@@ -328,18 +296,14 @@ static bool tech_is_connected(struct json_object *jobj)
  *	information is used to place the field on the x axis
  * @param val The json object representation to print in the field buffer
  */
-static FIELD* render_field(int longest_key_len, struct json_object *val)
-{
+static FIELD *render_field(int longest_key_len, struct json_object *val) {
 	FIELD *result;
-
 	result = new_field(1, 30, cur_y, longest_key_len, 0, 0);
-
 	if (result) {
 		field_opts_off(result, O_AUTOSKIP);
 		field_opts_off(result, O_STATIC);
 		set_field_buffer(result, 0, json_object_get_string(val));
 	}
-
 	return result;
 }
 
@@ -350,19 +314,15 @@ static FIELD* render_field(int longest_key_len, struct json_object *val)
  *	information is used to place the field on the x axis
  * @param label_str The string to fill the label buffer with
  */
-static FIELD* render_label(int longest_key_len, const char *label_str)
-{
+static FIELD *render_label(int longest_key_len, const char *label_str) {
 	FIELD *result;
-
-	result = new_field(1, longest_key_len-4, cur_y, cur_x, 0, 0);
-
+	result = new_field(1, longest_key_len - 4, cur_y, cur_x, 0, 0);
 	if (result) {
 		field_opts_on(result, O_VISIBLE);
 		field_opts_off(result, O_EDIT);
 		field_opts_off(result, O_ACTIVE);
 		set_field_buffer(result, 0, label_str);
 	}
-
 	return result;
 }
 
@@ -374,33 +334,29 @@ static FIELD* render_label(int longest_key_len, const char *label_str)
  * @param obj_str The string of the label surrounding main_fields[pos]
  * @param key The string of the current field
  */
-static void config_fields_type(int pos, bool is_autoconnect, const char *obj_str,
-		const char *key)
-{
+static void config_fields_type(int pos, bool is_autoconnect,
+                               const char *obj_str,
+                               const char *key) {
 	if (is_autoconnect) {
 		set_field_type(main_fields[pos], TYPE_ENUM, true_false_enum, 0, 1);
 		return;
 	}
-
 	if (strcmp(key, key_serv_ipv6_privacy) == 0) {
 		set_field_type(main_fields[pos], TYPE_ENUM, ipv6_privacy_enum, 0, 1);
 		return;
 	}
-
 	// Only "Method" attributes below this point.
-	if (strcmp(key, key_serv_ipv4_method) != 0 || obj_str == NULL)
+	if (strcmp(key, key_serv_ipv4_method) != 0 || obj_str == NULL) {
 		return;
-
+	}
 	if (strcmp(obj_str, key_serv_ipv4_config) == 0) {
 		set_field_type(main_fields[pos], TYPE_ENUM, ipv4_method_enum, 0, 1);
 		return;
 	}
-
 	if (strcmp(obj_str, key_serv_ipv6_config) == 0) {
 		set_field_type(main_fields[pos], TYPE_ENUM, ipv6_method_enum, 0, 1);
 		return;
 	}
-
 	if (strcmp(obj_str, key_serv_proxy_config) == 0) {
 		set_field_type(main_fields[pos], TYPE_ENUM, proxy_method_enum, 0, 1);
 		return;
@@ -420,58 +376,49 @@ static void config_fields_type(int pos, bool is_autoconnect, const char *obj_str
  * @param obj_str The string representing the "hash" of a surrounding object
  */
 static void render_fields_from_jobj(int longest_key_len, int *pos,
-		struct json_object *jobj, bool is_obj_modifiable,
-		const char *obj_str)
-{
+                                    struct json_object *jobj, bool is_obj_modifiable,
+                                    const char *obj_str) {
 	bool is_autoconnect = false, is_modifiable = false;
 	struct userptr_data *data;
-
 	json_object_object_foreach(jobj, key, val) {
 		main_fields[*pos] = render_label(longest_key_len, key);
 		assert(main_fields[*pos] != NULL);
 		(*pos)++;
-
 		is_modifiable = string_ends_with_configuration(key);
 		is_modifiable |= is_obj_modifiable;
-
 		if (json_object_get_type(val) == json_type_object) {
-			move_field(main_fields[(*pos)-1], ++cur_y, cur_x);
+			move_field(main_fields[(*pos) - 1], ++cur_y, cur_x);
 			cur_y++;
 			render_fields_from_jobj(longest_key_len, pos, val,
-					is_modifiable, key);
+			                        is_modifiable, key);
 			is_modifiable = false;
 		} else {
 			// insert the page delimiter
-			if (cur_y >= win_body_lines-4) {
+			if (cur_y >= win_body_lines - 4) {
 				cur_y = 1;
-				set_new_page(main_fields[(*pos)-1], TRUE);
-				move_field(main_fields[(*pos)-1], cur_y, cur_x);
+				set_new_page(main_fields[(*pos) - 1], TRUE);
+				move_field(main_fields[(*pos) - 1], cur_y, cur_x);
 				nb_pages++;
 			}
-
 			main_fields[*pos] = render_field(longest_key_len, val);
 			assert(main_fields[*pos] != NULL);
 			is_autoconnect = strcmp(key, key_serv_autoconnect) == 0;
-
 			if (is_modifiable || is_autoconnect) {
 				field_opts_on(main_fields[*pos], O_EDIT);
 				field_opts_off(main_fields[*pos], O_BLANK);
 				set_field_back(main_fields[*pos], A_UNDERLINE);
-			} else
+			} else {
 				field_opts_off(main_fields[*pos], O_EDIT);
-
+			}
 			// Specific operations on fields
 			config_fields_type(*pos, is_autoconnect, obj_str, key);
-
 			field_opts_on(main_fields[*pos], O_NULLOK);
 			data = malloc(sizeof(struct userptr_data));
 			data->dbus_name = strdup(get_str_key());
 			data->pretty_name = NULL;
 			set_field_userptr(main_fields[*pos], data);
-
 			(*pos)++;
 		}
-
 		cur_y++;
 	}
 }
@@ -484,35 +431,32 @@ static void render_fields_from_jobj(int longest_key_len, int *pos,
  * The first label contain the service name in the user pointer.
  * @param serv_array Array of json objects representing services
  */
-static void renderers_service_config(struct json_object *serv_array)
-{
+static void renderers_service_config(struct json_object *serv_array) {
 	struct json_object *serv_dict, *tmp, *tmp_val;
 	int longest_key_len, i, k;
 	const int max_nb_fields = 113;
 	struct userptr_data *data;
 	const char *serv_dbus_name;
 	const char *keys[] = { key_serv_state, key_serv_error, key_serv_name,
-		key_serv_type, key_serv_security, key_serv_strength,
-		key_serv_favorite, key_serv_immutable, key_serv_roaming,
-		key_serv_autoconnect, key_serv_ethernet, key_serv_ipv4,
-		key_serv_ipv4_config, key_serv_ipv6, key_serv_ipv6_config,
-		key_serv_nameservers, key_serv_nameservers_config,
-		key_serv_timeservers, key_serv_timeservers_config,
-		key_serv_domains, key_serv_domains_config, key_serv_proxy,
-		key_serv_proxy_config, key_serv_prov, NULL };
-
+	                       key_serv_type, key_serv_security, key_serv_strength,
+	                       key_serv_favorite, key_serv_immutable, key_serv_roaming,
+	                       key_serv_autoconnect, key_serv_ethernet, key_serv_ipv4,
+	                       key_serv_ipv4_config, key_serv_ipv6, key_serv_ipv6_config,
+	                       key_serv_nameservers, key_serv_nameservers_config,
+	                       key_serv_timeservers, key_serv_timeservers_config,
+	                       key_serv_domains, key_serv_domains_config, key_serv_proxy,
+	                       key_serv_proxy_config, key_serv_prov, NULL
+	                     };
 	cur_y = 1;
 	cur_x = 1;
 	serv_dict = json_object_array_get_idx(serv_array, 1);
 	serv_dbus_name = json_object_get_string(
-			json_object_array_get_idx(serv_array, 0));
-
+	                     json_object_array_get_idx(serv_array, 0));
 	longest_key_len = 25 + 4; // len("Nameservers.Configuration") + padding
-	main_fields = malloc(sizeof(FIELD *) * max_nb_fields); // 113 = #fields + #labels + 1
+	main_fields = malloc(sizeof(FIELD *) *
+	                     max_nb_fields); // 113 = #fields + #labels + 1
 	i = 0;
-
 	str_field[0] = '\0';
-
 	for (k = 0; keys[k] != NULL && i < max_nb_fields; k++) {
 		if (json_object_object_get_ex(serv_dict, keys[k], &tmp_val) == TRUE) {
 			tmp = json_object_new_object();
@@ -521,23 +465,19 @@ static void renderers_service_config(struct json_object *serv_array)
 			json_object_put(tmp);
 		}
 	}
-
 	nb_fields = i;
-
 	data = malloc(sizeof(struct userptr_data));
 	data->dbus_name = strdup(serv_dbus_name);
 	data->pretty_name = NULL;
 	set_field_userptr(main_fields[0], data);
 	main_fields[i] = NULL;
-
 	main_form = new_form(main_fields);
 	assert(main_form != NULL);
 	set_form_win(main_form, win_body);
-	inner = derwin(win_body, win_body_lines-1, COLS-2, 2, 1);
+	inner = derwin(win_body, win_body_lines - 1, COLS - 2, 2, 1);
 	box(inner, 0, 0);
 	assert(inner != NULL);
 	set_form_sub(main_form, inner);
-
 	post_form(main_form);
 	__renderers_services_config_paging();
 	refresh_service_config_msg();
@@ -549,18 +489,16 @@ static void renderers_service_config(struct json_object *serv_array)
  * It's realy meaningful when the configuration form can't be displayed entirely
  * on the screen.
  */
-void __renderers_services_config_paging(void)
-{
-	if (!main_form)
+void __renderers_services_config_paging(void) {
+	if (!main_form) {
 		return;
-
-	if (!nb_pages)
+	}
+	if (!nb_pages) {
 		mvwprintw(win_body, 1, 2, "Service configuration :");
-	else
+	} else
 		mvwprintw(win_body, 1, 2, "Service configuration (page %d/%d, use "
-				"page_up/page_down to change page):",
-				form_page(main_form)+1, main_form->maxpage);
-
+		          "page_up/page_down to change page):",
+		          form_page(main_form) + 1, main_form->maxpage);
 	pos_form_cursor(main_form);
 }
 
@@ -569,49 +507,38 @@ void __renderers_services_config_paging(void)
  * Only the "Name" (connman term) is displayed.
  * @param jobj The services array
  */
-static void renderers_services_ethernet(struct json_object *jobj)
-{
+static void renderers_services_ethernet(struct json_object *jobj) {
 	int i;
 	// Name  State
 	char *desc_base = "%c %-9s %-24s%-17s", *desc, favorite_char;
 	const char *interface_str, *name_str, *state_str, *dbus_name_str;
 	struct json_object *sub_array, *serv_name, *serv_dict, *tmp;
 	struct userptr_data *data;
-
 	mvwprintw(win_body, 3, 2, "  %-9s %-24s%-17s", key_serv_eth_interface,
-			key_serv_name, key_serv_state);
-
+	          key_serv_name, key_serv_state);
 	for (i = 0; i < nb_items; i++) {
 		sub_array = json_object_array_get_idx(jobj, i);
 		serv_name = json_object_array_get_idx(sub_array, 0);
 		serv_dict = json_object_array_get_idx(sub_array, 1);
-
 		json_object_object_get_ex(serv_dict, key_serv_ethernet, &tmp);
 		json_object_object_get_ex(tmp, key_serv_eth_interface, &tmp);
 		interface_str = json_object_get_string(tmp);
-
 		json_object_object_get_ex(serv_dict, key_serv_name, &tmp);
 		name_str = json_object_get_string(tmp);
-
 		json_object_object_get_ex(serv_dict, key_serv_state, &tmp);
 		state_str = json_object_get_string(tmp);
-
 		json_object_object_get_ex(serv_dict, key_serv_favorite, &tmp);
 		favorite_char = ' ';
-
-		if (tmp && json_object_get_boolean(tmp) == TRUE)
+		if (tmp && json_object_get_boolean(tmp) == TRUE) {
 			favorite_char = 'f';
-
+		}
 		desc = malloc(RENDERERS_STRING_MAX_LEN);
 		assert(desc != NULL);
-		snprintf(desc, RENDERERS_STRING_MAX_LEN-1, desc_base,
-				favorite_char, interface_str, name_str, state_str);
-		desc[RENDERERS_STRING_MAX_LEN-1] = '\0';
-
+		snprintf(desc, RENDERERS_STRING_MAX_LEN - 1, desc_base,
+		         favorite_char, interface_str, name_str, state_str);
+		desc[RENDERERS_STRING_MAX_LEN - 1] = '\0';
 		dbus_name_str = json_object_get_string(serv_name);
-
 		main_items[i] = new_item(desc, "");
-
 		data = malloc(sizeof(struct userptr_data));
 		assert(data != NULL);
 		data->dbus_name = strdup(dbus_name_str);
@@ -625,39 +552,33 @@ static void renderers_services_ethernet(struct json_object *jobj)
  * eSSID, State, Security and Signal strengh are displayed.
  * @param jobj The services array
  */
-static void renderers_services_wifi(struct json_object *jobj)
-{
+static void renderers_services_wifi(struct json_object *jobj) {
 	int i;
 	// (favorite) Interface eSSID  State  Security  Signal
 	char *desc_base = "%c %-9s %-29s%-17s%-13s%u%%", *desc, favorite_char,
-	     *essid_str, *security_str;
+	      *essid_str, *security_str;
 	const char *interface_str, *state_str, *serv_name_str;
 	uint8_t signal_strength;
 	struct json_object *sub_array, *serv_name, *serv_dict, *tmp;
 	struct userptr_data *data;
-
 	mvwprintw(win_body, 3, 2, "  %-9s %-29s%-17s%-10s%5s", key_serv_eth_interface,
-			"eSSID", key_serv_state, key_serv_security,
-			"Signal");
-
+	          "eSSID", key_serv_state, key_serv_security,
+	          "Signal");
 	for (i = 0; i < nb_items; i++) {
 		sub_array = json_object_array_get_idx(jobj, i);
 		serv_name = json_object_array_get_idx(sub_array, 0);
 		serv_dict = json_object_array_get_idx(sub_array, 1);
-
 		json_object_object_get_ex(serv_dict, key_serv_ethernet, &tmp);
 		json_object_object_get_ex(tmp, key_serv_eth_interface, &tmp);
 		assert(tmp != NULL);
 		interface_str = json_object_get_string(tmp);
-
 		json_object_object_get_ex(serv_dict, key_serv_name, &tmp);
-
 		// hidden wifi
-		if (tmp)
+		if (tmp) {
 			essid_str = (char *) json_object_get_string(tmp);
-		else
+		} else {
 			essid_str = "[hidden]";
-
+		}
 		if (strlen(essid_str) > 28) {
 			essid_str[25] = '.';
 			essid_str[26] = '.';
@@ -665,38 +586,30 @@ static void renderers_services_wifi(struct json_object *jobj)
 			essid_str[28] = ' ';
 			essid_str[29] = '\0';
 		}
-
 		json_object_object_get_ex(serv_dict, key_serv_security, &tmp);
 		assert(tmp != NULL);
 		security_str = (char *) json_object_get_string(tmp);
 		security_str += 2; // removes the two first char '[ '
-		security_str[strlen(security_str)-2] = '\0'; // removes the two last char ' ]'
-
+		security_str[strlen(security_str) - 2] = '\0'; // removes the two last char ' ]'
 		json_object_object_get_ex(serv_dict, key_serv_strength, &tmp);
 		assert(tmp != NULL);
 		signal_strength = (uint8_t) json_object_get_int(tmp);
-
 		json_object_object_get_ex(serv_dict, key_serv_state, &tmp);
 		assert(tmp != NULL);
 		state_str = json_object_get_string(tmp);
-
 		json_object_object_get_ex(serv_dict, key_serv_favorite, &tmp);
 		favorite_char = ' ';
-
-		if (tmp && json_object_get_boolean(tmp) == TRUE)
+		if (tmp && json_object_get_boolean(tmp) == TRUE) {
 			favorite_char = 'f';
-
+		}
 		desc = malloc(RENDERERS_STRING_MAX_LEN);
 		assert(desc != NULL);
-		snprintf(desc, RENDERERS_STRING_MAX_LEN-1, desc_base,
-				favorite_char, interface_str, essid_str,
-				state_str, security_str, signal_strength);
-		desc[RENDERERS_STRING_MAX_LEN-1] = '\0';
-
+		snprintf(desc, RENDERERS_STRING_MAX_LEN - 1, desc_base,
+		         favorite_char, interface_str, essid_str,
+		         state_str, security_str, signal_strength);
+		desc[RENDERERS_STRING_MAX_LEN - 1] = '\0';
 		serv_name_str = json_object_get_string(serv_name);
-
 		main_items[i] = new_item(desc, "");
-
 		data = malloc(sizeof(struct userptr_data));
 		assert(data != NULL);
 		data->dbus_name = strdup(serv_name_str);
@@ -711,48 +624,40 @@ static void renderers_services_wifi(struct json_object *jobj)
  * The switch between wifi and ethernet technoloy is done here.
  * @param jobj The services array
  */
-static void renderers_services(struct json_object *jobj)
-{
+static void renderers_services(struct json_object *jobj) {
 	char *dbus_short_name;
 	struct json_object *array, *dbus_long_name;
-
 	main_menu = NULL;
 	nb_items = json_object_array_length(jobj);
-
 	if (nb_items == 0) {
 		mvwprintw(win_body, 1, 2, "No suitable services found for this"
-				" technology");
+		          " technology");
 		wrefresh(win_body);
 		return;
 	}
-
 	array = json_object_array_get_idx(jobj, 0);
 	dbus_long_name = json_object_array_get_idx(array, 0);
-
-	dbus_short_name = extract_dbus_short_name(json_object_get_string(dbus_long_name));
-	main_items = malloc(sizeof(ITEM *) * (nb_items+1));
+	dbus_short_name = extract_dbus_short_name(json_object_get_string(
+	                      dbus_long_name));
+	main_items = malloc(sizeof(ITEM *) * (nb_items + 1));
 	assert(main_items != NULL);
-
-	if (strncmp(dbus_short_name, "ethernet_", 9) == 0)
+	if (strncmp(dbus_short_name, "ethernet_", 9) == 0) {
 		renderers_services_ethernet(jobj);
-	else if (strncmp(dbus_short_name, "wifi_", 5) == 0)
+	} else if (strncmp(dbus_short_name, "wifi_", 5) == 0) {
 		renderers_services_wifi(jobj);
-	else
+	} else {
 		assert(true);
-
+	}
 	free(dbus_short_name);
-
 	mvwprintw(win_body, 1, 2, "Choose a network to connect to:");
-
 	main_items[nb_items] = NULL;
 	main_menu = new_menu(main_items);
 	set_menu_win(main_menu, win_body);
-	set_menu_sub(main_menu, derwin(win_body, win_body_lines-3, COLS-4, 4, 2));
+	set_menu_sub(main_menu, derwin(win_body, win_body_lines - 3, COLS - 4, 4, 2));
 	menu_opts_off(main_menu, O_SHOWDESC);
 	set_menu_mark(main_menu, "");
-	set_menu_format(main_menu, win_body_lines-3, 1);
+	set_menu_format(main_menu, win_body_lines - 3, 1);
 	assert(post_menu(main_menu) == E_OK);
-
 	refresh_services_msg();
 	repos_cursor();
 }
@@ -760,36 +665,29 @@ static void renderers_services(struct json_object *jobj)
 /*
  * Free the memory allocated for the services view by renderers_services.
  */
-void __renderers_free_services(void)
-{
+void __renderers_free_services(void) {
 	int i;
 	struct userptr_data *data;
 	const char *item_name_desc = NULL;
-
-	if (main_menu == NULL)
+	if (main_menu == NULL) {
 		return;
-
+	}
 	unpost_menu(main_menu);
-
 	for (i = 0; i < nb_items; i++) {
 		data = item_userptr(main_items[i]);
 		free((void *) data->dbus_name);
 		free((void *) data->pretty_name);
 		free(data);
-
 		item_name_desc = item_name(main_items[i]);
-
-		if (item_name_desc != NULL)
+		if (item_name_desc != NULL) {
 			free((void *) item_name_desc);
-
+		}
 		item_name_desc = item_description(main_items[i]);
-
-		if (item_name_desc != NULL)
+		if (item_name_desc != NULL) {
 			free((void *) item_name_desc);
-
+		}
 		free_item(main_items[i]);
 	}
-
 	free_menu(main_menu);
 	free(main_items);
 	nb_items = 0;
@@ -808,34 +706,28 @@ void __renderers_free_services(void)
 	key_services: [ [ "service dbus name", { serv dict } ], ... ]
  }
  */
-void __renderers_services(struct json_object *jobj)
-{
+void __renderers_services(struct json_object *jobj) {
 	struct json_object *tech_array, *tech_dict, *serv_array;
-
 	json_object_object_get_ex(jobj, key_technology, &tech_array);
 	json_object_object_get_ex(jobj, key_services, &serv_array);
 	werase(win_body);
 	box(win_body, 0, 0);
-
 	if (!tech_array && serv_array) {
 		renderers_service_config(json_object_array_get_idx(serv_array, 0));
 		context.current_context = CONTEXT_SERVICE_CONFIG_STANDALONE;
 		__renderers_services_config_paging();
 		return;
 	}
-
-	if (tech_array == NULL || serv_array == NULL)
+	if (tech_array == NULL || serv_array == NULL) {
 		return;
-
+	}
 	tech_dict = json_object_array_get_idx(tech_array, 1);
 	nb_pages = 0;
-
 	if (tech_is_connected(tech_dict)) {
 		if (!serv_array || json_object_array_length(serv_array) == 0) {
 			main_menu = NULL;
 			return;
 		}
-
 		// propose modifications of service parameters
 		renderers_service_config(json_object_array_get_idx(serv_array, 0));
 		context.current_context = CONTEXT_SERVICE_CONFIG;
@@ -845,39 +737,32 @@ void __renderers_services(struct json_object *jobj)
 		renderers_services(serv_array);
 		context.current_context = CONTEXT_SERVICES;
 	}
-
 	wrefresh(win_body);
 }
 
 /*
  * Free the allocated memory for the service configuration view.
  */
-void __renderers_free_service_config(void)
-{
+void __renderers_free_service_config(void) {
 	int i;
 	struct userptr_data *tmp;
-
-	if (main_form == NULL)
+	if (main_form == NULL) {
 		return;
-
+	}
 	unpost_form(main_form);
-
 	for (i = 0; i < nb_fields && main_fields[i] != NULL; i++) {
 		tmp = field_userptr(main_fields[i]);
-
 		if (tmp) {
-			if (tmp->dbus_name)
+			if (tmp->dbus_name) {
 				free(tmp->dbus_name);
-
-			if (tmp->pretty_name)
+			}
+			if (tmp->pretty_name) {
 				free(tmp->pretty_name);
-
+			}
 			free(tmp);
 		}
-
 		free_field(main_fields[i]);
 	}
-
 	free_form(main_form);
 	free(main_fields);
 	nb_fields = 0;

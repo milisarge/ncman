@@ -45,8 +45,10 @@ const char key_engine_config_service[] = "config_service";
 const char key_engine_toggle_tech_power[] = "toggle_tech_power";
 const char key_engine_toggle_offline_mode[] = "toggle_offline_mode";
 const char key_engine_remove_service[] = "remove_service";
-const char key_engine_tech_regex[] = "{ \"technology\": \"(%5C%5C|/|([a-zA-Z]))+\" }";
-const char key_engine_serv_regex[] = "{ \"service\": \"(%5C%5C|/|([a-zA-Z]))+\" }";
+const char key_engine_tech_regex[] =
+    "{ \"technology\": \"(%5C%5C|/|([a-zA-Z]))+\" }";
+const char key_engine_serv_regex[] =
+    "{ \"service\": \"(%5C%5C|/|([a-zA-Z]))+\" }";
 const char key_engine_get_service[] = "get_service";
 
 const char key_success[] = "OK";
@@ -113,7 +115,7 @@ const char key_serv_prov_domain[] = "Domain";
 const char key_serv_prov_name[] = "Name";
 const char key_serv_prov_type[] = "Type";
 
-const char key_sig_serv_changed[]= "ServicesChanged";
+const char key_sig_serv_changed[] = "ServicesChanged";
 const char key_sig_prop_changed[] = "PropertyChanged";
 const char key_sig_tech_added[] = "TechnologyAdded";
 const char key_sig_tech_removed[] = "TechnologyRemoved";

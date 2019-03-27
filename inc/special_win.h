@@ -22,9 +22,9 @@
 #ifndef __ERROR_REPORTING_H
 #define __ERROR_REPORTING_H
 
-WINDOW* win_error_new(int rows, int cols, int posy, int posx, const char *msg);
+WINDOW *win_error_new(int rows, int cols, int posy, int posx, const char *msg);
 
-WINDOW* win_help_new(int rows, int cols, int posy, int posx, const char *msg);
+WINDOW *win_help_new(int rows, int cols, int posy, int posx, const char *msg);
 
 bool win_exists(WINDOW *win);
 

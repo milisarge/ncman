@@ -30,9 +30,9 @@
 extern "C" {
 #endif
 
-void print_info_in_footer(bool is_error, const char* msg, ...);
+void print_info_in_footer(bool is_error, const char *msg, ...);
 
-void print_info_in_footer2(bool is_error, const char* msg, ...);
+void print_info_in_footer2(bool is_error, const char *msg, ...);
 
 void refresh_home_msg(void);
 

@@ -28,9 +28,9 @@
 extern "C" {
 #endif
 
-char* trim_whitespaces(char *str);
+char *trim_whitespaces(char *str);
 
-char* extract_dbus_short_name(const char *str);
+char *extract_dbus_short_name(const char *str);
 
 bool check_dbus_name(const char *name);
 
