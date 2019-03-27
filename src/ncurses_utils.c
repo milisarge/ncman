@@ -41,42 +41,42 @@ extern WINDOW *win_footer;
 
 static void print_in_footer(bool is_error, int line, const char *msg,
                             va_list args) {
-	mvwprintw(win_footer, line, 0, (is_error ? " [ERROR] " : " [INFO] "));
-	vwprintw(win_footer, msg, args);
-	wprintw(win_footer, "\n");
-	wrefresh(win_footer);
+    mvwprintw(win_footer, line, 0, (is_error ? " [ERROR] " : " [INFO] "));
+    vwprintw(win_footer, msg, args);
+    wprintw(win_footer, "\n");
+    wrefresh(win_footer);
 }
 
 void print_info_in_footer(bool is_error, const char *msg, ...) {
-	va_list args;
-	va_start(args, msg);
-	print_in_footer(is_error, 0, msg, args);
-	va_end(args);
+    va_list args;
+    va_start(args, msg);
+    print_in_footer(is_error, 0, msg, args);
+    va_end(args);
 }
 
 void print_info_in_footer2(bool is_error, const char *msg, ...) {
-	va_list args;
-	va_start(args, msg);
-	print_in_footer(is_error, 1, msg, args);
-	va_end(args);
+    va_list args;
+    va_start(args, msg);
+    print_in_footer(is_error, 1, msg, args);
+    va_end(args);
 }
 
 void refresh_home_msg(void) {
-	print_info_in_footer(false, "'d' to disconnect, 'p' to toggle Powered"
-	                     ", 'o' to toggle OfflineMode");
-	print_info_in_footer2(false, "'Return' for details, 'F5' to force "
-	                      "refresh, ^C to quit, 'F1' for help");
+    print_info_in_footer(false, "'d' to disconnect, 'p' to toggle Powered"
+                         ", 'o' to toggle OfflineMode");
+    print_info_in_footer2(false, "'Return' for details, 'F5' to force "
+                          "refresh, ^C to quit, 'F1' for help");
 }
 
 void refresh_services_msg(void) {
-	print_info_in_footer(false, "'F5' to refresh network list, "
-	                     "'F6' to force a scan, 's' to configure");
-	print_info_in_footer2(false, "'r' to remove favorite, 'Esc' to get"
-	                      "back, 'F1' for help");
+    print_info_in_footer(false, "'F5' to refresh network list, "
+                         "'F6' to force a scan, 's' to configure");
+    print_info_in_footer2(false, "'r' to remove favorite, 'Esc' to get"
+                          "back, 'F1' for help");
 }
 
 void refresh_service_config_msg(void) {
-	print_info_in_footer(false, "'F5' to force refresh, "
-	                     "'F7' to submit settings");
-	print_info_in_footer2(false, "'Esc' to get back, 'F1' for help");
+    print_info_in_footer(false, "'F5' to force refresh, "
+                         "'F7' to submit settings");
+    print_info_in_footer2(false, "'Esc' to get back, 'F1' for help");
 }

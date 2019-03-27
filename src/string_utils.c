@@ -32,22 +32,22 @@
  * This is useful because ncurses fill fields blanks with spaces.
  */
 char *trim_whitespaces(char *str) {
-	char *end;
-	// trim leading space
-	while (isspace(*str)) {
-		str++;
-	}
-	if (*str == 0) { // all spaces?
-		return str;
-	}
-	// trim trailing space
-	end = str + strnlen(str, 128) - 1;
-	while (end > str && isspace(*end)) {
-		end--;
-	}
-	// write new null terminator
-	*(end + 1) = '\0';
-	return str;
+    char *end;
+    // trim leading space
+    while (isspace(*str)) {
+        str++;
+    }
+    if (*str == 0) { // all spaces?
+        return str;
+    }
+    // trim trailing space
+    end = str + strnlen(str, 128) - 1;
+    while (end > str && isspace(*end)) {
+        end--;
+    }
+    // write new null terminator
+    *(end + 1) = '\0';
+    return str;
 }
 
 /*
@@ -55,13 +55,13 @@ char *trim_whitespaces(char *str) {
  * Don't forget to free the return value.
  */
 char *extract_dbus_short_name(const char *str) {
-	char *last_token = strrchr(str, '/'), *res;
-	if (!last_token) {
-		return NULL;
-	}
-	last_token++;
-	res = strdup(last_token);
-	return res;
+    char *last_token = strrchr(str, '/'), *res;
+    if (!last_token) {
+        return NULL;
+    }
+    last_token++;
+    res = strdup(last_token);
+    return res;
 }
 
 /*
@@ -69,28 +69,28 @@ char *extract_dbus_short_name(const char *str) {
  * and should not start with number.
  */
 bool check_dbus_name(const char *name) {
-	unsigned int i;
-	if (!name || name[0] == '\0') {
-		return false;
-	}
-	for (i = 0; name[i] != '\0'; i++)
-		if (!((name[i] >= 'A' && name[i] <= 'Z') ||
-		        (name[i] >= 'a' && name[i] <= 'z') ||
-		        (name[i] >= '0' && name[i] <= '9') ||
-		        name[i] == '_')) {
-			return false;
-		}
-	return true;
+    unsigned int i;
+    if (!name || name[0] == '\0') {
+        return false;
+    }
+    for (i = 0; name[i] != '\0'; i++)
+        if (!((name[i] >= 'A' && name[i] <= 'Z') ||
+                (name[i] >= 'a' && name[i] <= 'z') ||
+                (name[i] >= '0' && name[i] <= '9') ||
+                name[i] == '_')) {
+            return false;
+        }
+    return true;
 }
 
 /*
  * Test if a given string ends with ".Configuration".
  */
 bool string_ends_with_configuration(const char *str) {
-	char *last_token;
-	last_token = strrchr(str, '.');
-	if (last_token) {
-		last_token++;
-	}
-	return (last_token && strcmp(last_token, "Configuration") == 0);
+    char *last_token;
+    last_token = strrchr(str, '.');
+    if (last_token) {
+        last_token++;
+    }
+    return (last_token && strcmp(last_token, "Configuration") == 0);
 }

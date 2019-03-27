@@ -41,8 +41,8 @@ extern int win_body_lines;
 extern int nb_pages;
 
 struct userptr_data {
-	char *dbus_name;	// e.g. /net/connman/wifi_XXXXXX_YYYY_none
-	char *pretty_name;	// e.g. MySuperWifiESSID
+    char *dbus_name;	// e.g. /net/connman/wifi_XXXXXX_YYYY_none
+    char *pretty_name;	// e.g. MySuperWifiESSID
 };
 
 // Different contexts we can be in
@@ -51,10 +51,10 @@ typedef enum {CONTEXT_HOME, CONTEXT_SERVICE_CONFIG, CONTEXT_SERVICES, CONTEXT_SE
 // This keep track of the execution context, the cursor position and current
 // service and technology user pointers.
 struct context_info {
-	context_t current_context;
-	struct userptr_data *serv;
-	struct userptr_data *tech;
-	char *cursor_id;		// tag-like, see main.c repos_cursor()
+    context_t current_context;
+    struct userptr_data *serv;
+    struct userptr_data *tech;
+    char *cursor_id;		// tag-like, see main.c repos_cursor()
 };
 
 void __renderers_state(struct json_object *jobj);

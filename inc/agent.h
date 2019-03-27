@@ -31,11 +31,11 @@ extern "C" {
 #endif
 
 struct agent_data {
-	char *interface;
-	bool registered;
-	DBusMessage *message;
-	DBusMessage *reply;
-	DBusMethodFunction pending_function;
+    char *interface;
+    bool registered;
+    DBusMessage *message;
+    DBusMessage *reply;
+    DBusMethodFunction pending_function;
 };
 
 struct agent_data;

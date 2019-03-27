@@ -45,13 +45,13 @@
  * @param trusted The trusted regex string
  */
 bool __match_strings(const char *str, const char *trusted) {
-	int regexp_err, regexp_match;
-	regex_t preg;
-	regexp_err = regcomp(&preg, trusted, REG_NOSUB | REG_EXTENDED);
-	assert(regexp_err == 0);
-	regexp_match = regexec(&preg, str, 0, NULL, 0);
-	regfree(&preg);
-	return (regexp_match == 0);
+    int regexp_err, regexp_match;
+    regex_t preg;
+    regexp_err = regcomp(&preg, trusted, REG_NOSUB | REG_EXTENDED);
+    assert(regexp_err == 0);
+    regexp_match = regexec(&preg, str, 0, NULL, 0);
+    regfree(&preg);
+    return (regexp_match == 0);
 }
 
 /*
@@ -59,8 +59,8 @@ bool __match_strings(const char *str, const char *trusted) {
  */
 static bool json_match_string(struct json_object *jobj,
                               struct json_object *jtrusted) {
-	return __match_strings(json_object_get_string(jobj),
-	                       json_object_get_string(jtrusted));
+    return __match_strings(json_object_get_string(jobj),
+                           json_object_get_string(jtrusted));
 }
 
 /*
@@ -70,21 +70,21 @@ static bool json_match_string(struct json_object *jobj,
  */
 static bool json_match_object(struct json_object *jobj,
                               struct json_object *jtrusted) {
-	bool res = true;
-	struct json_object *tmp_trusted;
-	json_bool key_is_trusted;
-	json_object_object_foreach(jobj, key, val) {
-		key_is_trusted = json_object_object_get_ex(jtrusted, key,
-		                 &tmp_trusted);
-		if (key_is_trusted == FALSE) {
-			return false;
-		}
-		res = __json_type_dispatch(val, tmp_trusted);
-		if (res == false) {
-			return res;
-		}
-	}
-	return res;
+    bool res = true;
+    struct json_object *tmp_trusted;
+    json_bool key_is_trusted;
+    json_object_object_foreach(jobj, key, val) {
+        key_is_trusted = json_object_object_get_ex(jtrusted, key,
+                         &tmp_trusted);
+        if (key_is_trusted == FALSE) {
+            return false;
+        }
+        res = __json_type_dispatch(val, tmp_trusted);
+        if (res == false) {
+            return res;
+        }
+    }
+    return res;
 }
 
 /*
@@ -96,22 +96,22 @@ static bool json_match_object(struct json_object *jobj,
  */
 static bool json_match_array(struct json_object *jobj,
                              struct json_object *jtrusted) {
-	bool res = true;
-	int array_len, i;
-	struct json_object *elem_trusted;
-	array_len = json_object_array_length(jobj);
-	if (array_len <= 0) {
-		return false;
-	}
-	elem_trusted = json_object_array_get_idx(jtrusted, 0);
-	assert(elem_trusted != NULL);
-	assert(json_object_get_type(elem_trusted) != json_type_null);
-	for (i = 0; i < array_len && res == true; i++) {
-		res = __json_type_dispatch(
-		          json_object_array_get_idx(jobj, i),
-		          elem_trusted);
-	}
-	return res;
+    bool res = true;
+    int array_len, i;
+    struct json_object *elem_trusted;
+    array_len = json_object_array_length(jobj);
+    if (array_len <= 0) {
+        return false;
+    }
+    elem_trusted = json_object_array_get_idx(jtrusted, 0);
+    assert(elem_trusted != NULL);
+    assert(json_object_get_type(elem_trusted) != json_type_null);
+    for (i = 0; i < array_len && res == true; i++) {
+        res = __json_type_dispatch(
+                  json_object_array_get_idx(jobj, i),
+                  elem_trusted);
+    }
+    return res;
 }
 
 /*
@@ -120,42 +120,42 @@ static bool json_match_array(struct json_object *jobj,
  */
 bool __json_type_dispatch(struct json_object *jobj,
                           struct json_object *jtrusted) {
-	enum json_type type, type_trusted;
-	bool res;
-	type = json_object_get_type(jobj);
-	type_trusted = json_object_get_type(jtrusted);
-	if (type != type_trusted) {
-		return false;
-	}
-	switch (type_trusted) {
-		case json_type_string:
-			res = json_match_string(jobj, jtrusted);
-			break;
-		case json_type_object:
-			res = json_match_object(jobj, jtrusted);
-			break;
-		case json_type_array:
-			res = json_match_array(jobj, jtrusted);
-			break;
-		case json_type_int:
-		case json_type_boolean:
-			res = true;
-			break;
-		default:
-			res = false;
-			break;
-	}
-	return res;
+    enum json_type type, type_trusted;
+    bool res;
+    type = json_object_get_type(jobj);
+    type_trusted = json_object_get_type(jtrusted);
+    if (type != type_trusted) {
+        return false;
+    }
+    switch (type_trusted) {
+        case json_type_string:
+            res = json_match_string(jobj, jtrusted);
+            break;
+        case json_type_object:
+            res = json_match_object(jobj, jtrusted);
+            break;
+        case json_type_array:
+            res = json_match_array(jobj, jtrusted);
+            break;
+        case json_type_int:
+        case json_type_boolean:
+            res = true;
+            break;
+        default:
+            res = false;
+            break;
+    }
+    return res;
 }
 
 /*
  * Return the string representation of jobj if it is a string, NULL otherwise.
  */
 static const char *get_string_from_jobj(struct json_object *jobj) {
-	if (json_object_get_type(jobj) == json_type_string) {
-		return json_object_get_string(jobj);
-	}
-	return NULL;
+    if (json_object_get_type(jobj) == json_type_string) {
+        return json_object_get_string(jobj);
+    }
+    return NULL;
 }
 
 /*
@@ -163,10 +163,10 @@ static const char *get_string_from_jobj(struct json_object *jobj) {
  * NULL is returned if key_command isn't found.
  */
 const char *__json_get_command_str(struct json_object *jobj) {
-	struct json_object *cmd;
-	json_object_object_get_ex(jobj, key_command, &cmd);
-	if (cmd) {
-		return get_string_from_jobj(cmd);
-	}
-	return NULL;
+    struct json_object *cmd;
+    json_object_object_get_ex(jobj, key_command, &cmd);
+    if (cmd) {
+        return get_string_from_jobj(cmd);
+    }
+    return NULL;
 }

@@ -73,25 +73,25 @@ void (*commands_signal)(struct json_object *data) = NULL;
  */
 static void call_return_list(DBusMessageIter *iter, const char *error,
                              void *user_data) {
-	struct json_object *res, *array;
-	json_bool jerror;
-	if (error) {
-		res = json_object_new_object();
-		array = json_object_new_array();
-		json_object_array_add(array, json_object_new_string(error));
-		json_object_object_add(res, key_error, array);
-		jerror = TRUE;
-	} else {
-		res = dbus_to_json(iter);
-		jerror = FALSE;
-		if (!res) {
-			res = json_object_new_object();
-		}
-	}
-	if (user_data)
-		json_object_object_add(res, key_return_force_refresh,
-		                       json_object_new_string((const char *)user_data));
-	commands_callback(res, jerror);
+    struct json_object *res, *array;
+    json_bool jerror;
+    if (error) {
+        res = json_object_new_object();
+        array = json_object_new_array();
+        json_object_array_add(array, json_object_new_string(error));
+        json_object_object_add(res, key_error, array);
+        jerror = TRUE;
+    } else {
+        res = dbus_to_json(iter);
+        jerror = FALSE;
+        if (!res) {
+            res = json_object_new_object();
+        }
+    }
+    if (user_data)
+        json_object_object_add(res, key_return_force_refresh,
+                               json_object_new_string((const char *)user_data));
+    commands_callback(res, jerror);
 }
 
 /*
@@ -99,41 +99,41 @@ static void call_return_list(DBusMessageIter *iter, const char *error,
  */
 static void call_return_list_free(DBusMessageIter *iter,
                                   const char *error, void *user_data) {
-	char *dbus_short_name = extract_dbus_short_name(user_data);
-	call_return_list(iter, error, dbus_short_name);
-	if (user_data) {
-		free(user_data);
-	}
-	if (dbus_short_name) {
-		free(dbus_short_name);
-	}
+    char *dbus_short_name = extract_dbus_short_name(user_data);
+    call_return_list(iter, error, dbus_short_name);
+    if (user_data) {
+        free(user_data);
+    }
+    if (dbus_short_name) {
+        free(dbus_short_name);
+    }
 }
 
 /*
  * Call the Manager GetProperties method.
  */
 int __cmd_state(void) {
-	return dbus_method_call(connection, key_connman_service,
-	                        key_connman_path, key_manager_interface, "GetProperties",
-	                        call_return_list, NULL, NULL, NULL);
+    return dbus_method_call(connection, key_connman_service,
+                            key_connman_path, key_manager_interface, "GetProperties",
+                            call_return_list, NULL, NULL, NULL);
 }
 
 /*
  * Call the Manager GetServices method.
  */
 int __cmd_services(void) {
-	return dbus_method_call(connection, key_connman_service,
-	                        key_connman_path, key_manager_interface, "GetServices",
-	                        call_return_list, NULL, NULL, NULL);
+    return dbus_method_call(connection, key_connman_service,
+                            key_connman_path, key_manager_interface, "GetServices",
+                            call_return_list, NULL, NULL, NULL);
 }
 
 /*
  * Call the Manager GetTechnologies method.
  */
 int __cmd_technologies(void) {
-	return dbus_method_call(connection, key_connman_service,
-	                        key_connman_path, key_manager_interface, "GetTechnologies",
-	                        call_return_list, NULL,	NULL, NULL);
+    return dbus_method_call(connection, key_connman_service,
+                            key_connman_path, key_manager_interface, "GetTechnologies",
+                            call_return_list, NULL,	NULL, NULL);
 }
 
 /*
@@ -143,10 +143,10 @@ int __cmd_technologies(void) {
  * @param serv_dbus_name the dbus name of the service
  */
 int __cmd_connect(const char *serv_dbus_name) {
-	return dbus_method_call(connection, key_connman_service,
-	                        serv_dbus_name, key_service_interface, "Connect",
-	                        call_return_list_free, strdup(key_connect_return), NULL,
-	                        NULL);
+    return dbus_method_call(connection, key_connman_service,
+                            serv_dbus_name, key_service_interface, "Connect",
+                            call_return_list_free, strdup(key_connect_return), NULL,
+                            NULL);
 }
 
 /*
@@ -154,9 +154,9 @@ int __cmd_connect(const char *serv_dbus_name) {
  * @param serv_dbus_name the dbus name of the service
  */
 int __cmd_disconnect(const char *serv_dbus_name) {
-	return dbus_method_call(connection, key_connman_service,
-	                        serv_dbus_name, key_service_interface, "Disconnect",
-	                        call_return_list, NULL, NULL, NULL);
+    return dbus_method_call(connection, key_connman_service,
+                            serv_dbus_name, key_service_interface, "Disconnect",
+                            call_return_list, NULL, NULL, NULL);
 }
 
 /*
@@ -165,9 +165,9 @@ int __cmd_disconnect(const char *serv_dbus_name) {
  * @param tech_dbus_name the dbus name of the technology
  */
 int __cmd_scan(const char *tech_dbus_name) {
-	return dbus_method_call(connection, key_connman_service,
-	                        tech_dbus_name, key_technology_interface, "Scan",
-	                        call_return_list_free, strdup(key_scan_return), NULL, NULL);
+    return dbus_method_call(connection, key_connman_service,
+                            tech_dbus_name, key_technology_interface, "Scan",
+                            call_return_list_free, strdup(key_scan_return), NULL, NULL);
 }
 
 /*
@@ -176,12 +176,12 @@ int __cmd_scan(const char *tech_dbus_name) {
  * @param set_power_to the new power state to set
  */
 int __cmd_toggle_tech_power(const char *tech_dbus_name, bool set_power_to) {
-	dbus_bool_t dbus_bool;
-	dbus_bool = set_power_to ? TRUE : FALSE;
-	return dbus_set_property(connection, tech_dbus_name,
-	                         "net.connman.Technology", call_return_list_free,
-	                         strdup(tech_dbus_name), "Powered",
-	                         DBUS_TYPE_BOOLEAN, &dbus_bool);
+    dbus_bool_t dbus_bool;
+    dbus_bool = set_power_to ? TRUE : FALSE;
+    return dbus_set_property(connection, tech_dbus_name,
+                             "net.connman.Technology", call_return_list_free,
+                             strdup(tech_dbus_name), "Powered",
+                             DBUS_TYPE_BOOLEAN, &dbus_bool);
 }
 
 /*
@@ -189,11 +189,11 @@ int __cmd_toggle_tech_power(const char *tech_dbus_name, bool set_power_to) {
  * @param set_offline_to the new offline mode to set
  */
 int __cmd_toggle_offline_mode(bool set_offline_to) {
-	dbus_bool_t dbus_bool;
-	dbus_bool = set_offline_to ? TRUE : FALSE;
-	return dbus_set_property(connection, "/",
-	                         "net.connman.Manager", call_return_list, NULL,
-	                         "OfflineMode", DBUS_TYPE_BOOLEAN, &dbus_bool);
+    dbus_bool_t dbus_bool;
+    dbus_bool = set_offline_to ? TRUE : FALSE;
+    return dbus_set_property(connection, "/",
+                             "net.connman.Manager", call_return_list, NULL,
+                             "OfflineMode", DBUS_TYPE_BOOLEAN, &dbus_bool);
 }
 
 /*
@@ -201,9 +201,9 @@ int __cmd_toggle_offline_mode(bool set_offline_to) {
  * @param serv_dbus_name the dbus name of the service
  */
 int __cmd_remove(const char *serv_dbus_name) {
-	return dbus_method_call(connection, key_connman_service,
-	                        serv_dbus_name, key_service_interface, "Remove",
-	                        call_return_list, NULL, NULL, NULL);
+    return dbus_method_call(connection, key_connman_service,
+                            serv_dbus_name, key_service_interface, "Remove",
+                            call_return_list, NULL, NULL, NULL);
 }
 
 /*
@@ -213,11 +213,11 @@ int __cmd_remove(const char *serv_dbus_name) {
  */
 static void config_append_ipv4(DBusMessageIter *iter,
                                struct json_object *jobj) {
-	const char *str;
-	json_object_object_foreach(jobj, key, val) {
-		str = json_object_get_string(val);
-		dbus_append_dict_entry(iter, key, DBUS_TYPE_STRING, &str);
-	}
+    const char *str;
+    json_object_object_foreach(jobj, key, val) {
+        str = json_object_get_string(val);
+        dbus_append_dict_entry(iter, key, DBUS_TYPE_STRING, &str);
+    }
 }
 
 /*
@@ -229,28 +229,28 @@ static void config_append_ipv4(DBusMessageIter *iter,
  */
 static void config_append_ipv6(DBusMessageIter *iter,
                                struct json_object *jobj) {
-	struct json_object *methobj;
-	const char *method, *str;
-	if (!json_object_object_get_ex(jobj, key_serv_ipv6_method, &methobj)) {
-		call_return_list(NULL, "No 'Method' set", "");
-		return;
-	}
-	method = json_object_get_string(methobj);
-	if (strcmp("6to4", method) == 0) {
-		call_return_list(NULL, "Cannot be set by user", "Service set"
-		                 " properties.");
-		return;
-	}
-	json_object_object_foreach(jobj, key, val) {
-		if (strcmp(key_serv_ipv6_prefixlength, key) == 0) {
-			int tmp = json_object_get_int(val);
-			dbus_append_dict_entry(iter, key,
-			                       DBUS_TYPE_BYTE, &tmp);
-		} else {
-			str = json_object_get_string(val);
-			dbus_append_dict_entry(iter, key, DBUS_TYPE_STRING, &str);
-		}
-	}
+    struct json_object *methobj;
+    const char *method, *str;
+    if (!json_object_object_get_ex(jobj, key_serv_ipv6_method, &methobj)) {
+        call_return_list(NULL, "No 'Method' set", "");
+        return;
+    }
+    method = json_object_get_string(methobj);
+    if (strcmp("6to4", method) == 0) {
+        call_return_list(NULL, "Cannot be set by user", "Service set"
+                         " properties.");
+        return;
+    }
+    json_object_object_foreach(jobj, key, val) {
+        if (strcmp(key_serv_ipv6_prefixlength, key) == 0) {
+            int tmp = json_object_get_int(val);
+            dbus_append_dict_entry(iter, key,
+                                   DBUS_TYPE_BYTE, &tmp);
+        } else {
+            str = json_object_get_string(val);
+            dbus_append_dict_entry(iter, key, DBUS_TYPE_STRING, &str);
+        }
+    }
 }
 
 /*
@@ -260,22 +260,22 @@ static void config_append_ipv6(DBusMessageIter *iter,
  */
 static void config_append_json_array_of_strings(DBusMessageIter *iter,
         struct json_object *jobj) {
-	struct json_object *strobj;
-	int i, len;
-	const char *str;
-	if (jobj && json_object_is_type(jobj, json_type_array)) {
-		len = json_object_array_length(jobj);
-		for (i = 0; i < len; i++) {
-			strobj = json_object_array_get_idx(jobj, i);
-			if (!strobj) {
-				continue;
-			}
-			str = json_object_get_string(strobj);
-			if (str) {
-				dbus_message_iter_append_basic(iter, DBUS_TYPE_STRING, &str);
-			}
-		}
-	}
+    struct json_object *strobj;
+    int i, len;
+    const char *str;
+    if (jobj && json_object_is_type(jobj, json_type_array)) {
+        len = json_object_array_length(jobj);
+        for (i = 0; i < len; i++) {
+            strobj = json_object_array_get_idx(jobj, i);
+            if (!strobj) {
+                continue;
+            }
+            str = json_object_get_string(strobj);
+            if (str) {
+                dbus_message_iter_append_basic(iter, DBUS_TYPE_STRING, &str);
+            }
+        }
+    }
 }
 
 /*
@@ -287,35 +287,35 @@ static void config_append_json_array_of_strings(DBusMessageIter *iter,
  */
 static void config_append_proxy(DBusMessageIter *iter,
                                 struct json_object *jobj) {
-	struct json_object *methobj, *urlobj, *tmpobj;
-	const char *method, *url;
-	if (!json_object_object_get_ex(jobj, key_serv_proxy_method, &methobj)) {
-		call_return_list(NULL, "No 'Method' set", "");
-		return;
-	}
-	method = json_object_get_string(methobj);
-	if (strcmp(method, "manual") == 0) {
-		if (!json_object_object_get_ex(jobj, key_serv_proxy_servers, &tmpobj)) {
-			tmpobj = 0;
-		}
-		dbus_append_dict_string_array(iter, key_serv_proxy_servers,
-		                              config_append_json_array_of_strings, tmpobj);
-		if (!json_object_object_get_ex(jobj, key_serv_proxy_excludes, &tmpobj)) {
-			tmpobj = 0;
-		}
-		dbus_append_dict_string_array(iter, key_serv_proxy_excludes,
-		                              config_append_json_array_of_strings, tmpobj);
-	} else if (strcmp(method, "auto") == 0) {
-		if (json_object_object_get_ex(jobj, key_serv_proxy_url, &urlobj)) {
-			url = json_object_get_string(urlobj);
-			if (url)
-				dbus_append_dict_entry(iter, key_serv_proxy_url,
-				                       DBUS_TYPE_STRING, url);
-		}
-	} else if (strcmp(method, "direct") != 0) {
-		return;
-	}
-	dbus_append_dict_entry(iter, key_serv_proxy_method, DBUS_TYPE_STRING, &method);
+    struct json_object *methobj, *urlobj, *tmpobj;
+    const char *method, *url;
+    if (!json_object_object_get_ex(jobj, key_serv_proxy_method, &methobj)) {
+        call_return_list(NULL, "No 'Method' set", "");
+        return;
+    }
+    method = json_object_get_string(methobj);
+    if (strcmp(method, "manual") == 0) {
+        if (!json_object_object_get_ex(jobj, key_serv_proxy_servers, &tmpobj)) {
+            tmpobj = 0;
+        }
+        dbus_append_dict_string_array(iter, key_serv_proxy_servers,
+                                      config_append_json_array_of_strings, tmpobj);
+        if (!json_object_object_get_ex(jobj, key_serv_proxy_excludes, &tmpobj)) {
+            tmpobj = 0;
+        }
+        dbus_append_dict_string_array(iter, key_serv_proxy_excludes,
+                                      config_append_json_array_of_strings, tmpobj);
+    } else if (strcmp(method, "auto") == 0) {
+        if (json_object_object_get_ex(jobj, key_serv_proxy_url, &urlobj)) {
+            url = json_object_get_string(urlobj);
+            if (url)
+                dbus_append_dict_entry(iter, key_serv_proxy_url,
+                                       DBUS_TYPE_STRING, url);
+        }
+    } else if (strcmp(method, "direct") != 0) {
+        return;
+    }
+    dbus_append_dict_entry(iter, key_serv_proxy_method, DBUS_TYPE_STRING, &method);
 }
 
 /*
@@ -338,26 +338,26 @@ static void config_append_proxy(DBusMessageIter *iter,
  */
 static void user_proof_manual_method(struct json_object *service,
                                      struct json_object *options) {
-	struct json_object *tmp;
-	const char *method_str;
-	// key_serv_ipv4_method == key_serv_ipv6_method == key_serv_proxy_method
-	// => "Method"
-	json_object_object_get_ex(options, key_serv_ipv4_method, &tmp);
-	if (!tmp) {
-		return;
-	}
-	method_str = json_object_get_string(tmp);
-	if (strcmp("manual", method_str) != 0 || json_object_is_type(service,
-	        json_type_object) == FALSE) {
-		return;
-	}
-	json_object_object_foreach(service, key, val) {
-		if (json_object_object_get_ex(options, key, NULL) == FALSE) {
-			// We "copy" the string
-			tmp = json_object_new_string(json_object_get_string(val));
-			json_object_object_add(options, key, tmp);
-		}
-	}
+    struct json_object *tmp;
+    const char *method_str;
+    // key_serv_ipv4_method == key_serv_ipv6_method == key_serv_proxy_method
+    // => "Method"
+    json_object_object_get_ex(options, key_serv_ipv4_method, &tmp);
+    if (!tmp) {
+        return;
+    }
+    method_str = json_object_get_string(tmp);
+    if (strcmp("manual", method_str) != 0 || json_object_is_type(service,
+            json_type_object) == FALSE) {
+        return;
+    }
+    json_object_object_foreach(service, key, val) {
+        if (json_object_object_get_ex(options, key, NULL) == FALSE) {
+            // We "copy" the string
+            tmp = json_object_new_string(json_object_get_string(val));
+            json_object_object_add(options, key, tmp);
+        }
+    }
 }
 
 /*
@@ -394,91 +394,91 @@ static void user_proof_manual_method(struct json_object *service,
  */
 int __cmd_config_service(struct json_object *service,
                          struct json_object *options) {
-	int res = 0;
-	char *simple_service_conf, *dyn_service_name;
-	dbus_bool_t dbus_bool;
-	struct json_object *tmp, *serv_dict;
-	const char *service_dbus_name;
-	tmp = json_object_array_get_idx(service, 0);
-	assert(tmp != NULL);
-	service_dbus_name = json_object_get_string(tmp);
-	serv_dict = json_object_array_get_idx(service, 1);
-	assert(serv_dict != NULL);
-	if (!service_dbus_name) {
-		call_return_list(NULL, "Wrong service name",
-		                 "Service set properties.");
-		return -EINVAL;
-	}
-	if (!options) {
-		call_return_list(NULL, "No options provided for service "
-		                 "configuration", "");
-		return -EINVAL;
-	}
-	json_object_object_foreach(options, key, val) {
-		simple_service_conf = NULL;
-		dyn_service_name = extract_dbus_short_name(service_dbus_name);
-		if (strcmp(key_serv_ipv4_config, key) == 0) {
-			json_object_object_get_ex(serv_dict, key_serv_ipv4, &tmp);
-			assert(tmp != NULL);
-			user_proof_manual_method(tmp, val);
-			res = dbus_set_property_dict(connection,
-			                             service_dbus_name, key_service_interface,
-			                             call_return_list_free, dyn_service_name,
-			                             key_serv_ipv4_config, DBUS_TYPE_STRING,
-			                             config_append_ipv4, val);
-		} else if (strcmp(key_serv_ipv6_config, key) == 0) {
-			json_object_object_get_ex(serv_dict, key_serv_ipv6, &tmp);
-			assert(tmp != NULL);
-			user_proof_manual_method(tmp, val);
-			res = dbus_set_property_dict(connection,
-			                             service_dbus_name, key_service_interface,
-			                             call_return_list_free, dyn_service_name,
-			                             key_serv_ipv6_config, DBUS_TYPE_STRING,
-			                             config_append_ipv6, val);
-		} else if (strcmp(key_serv_proxy_config, key) == 0) {
-			json_object_object_get_ex(serv_dict, key_serv_proxy, &tmp);
-			assert(tmp != NULL);
-			user_proof_manual_method(tmp, val);
-			res = dbus_set_property_dict(connection,
-			                             service_dbus_name, key_service_interface,
-			                             call_return_list_free, dyn_service_name,
-			                             key_serv_proxy_config, DBUS_TYPE_STRING,
-			                             config_append_proxy, val);
-		} else if (strcmp(key_serv_autoconnect, key) == 0) {
-			if (json_object_get_boolean(val) == TRUE) {
-				dbus_bool = TRUE;
-			} else {
-				dbus_bool = FALSE;
-			}
-			res = dbus_set_property(connection, service_dbus_name,
-			                        key_service_interface, call_return_list_free,
-			                        dyn_service_name, key_serv_autoconnect,
-			                        DBUS_TYPE_BOOLEAN, &dbus_bool);
-		} else if (strcmp(key_serv_domains_config, key) == 0) {
-			simple_service_conf = key;
-		} else if (strcmp(key_serv_nameservers_config, key) == 0) {
-			simple_service_conf = key;
-		} else if (strcmp(key_serv_timeservers_config, key) == 0) {
-			simple_service_conf = key;
-		} else {
-			char *str = strndup(key, JSON_COMMANDS_STRING_SIZE_SMALL);
-			call_return_list_free(NULL, "Unknown configuration key", str);
-			res = -EINVAL;
-		}
-		if (simple_service_conf != NULL) {
-			res = dbus_set_property_array(connection,
-			                              service_dbus_name, key_service_interface,
-			                              call_return_list_free,
-			                              dyn_service_name,
-			                              simple_service_conf, DBUS_TYPE_STRING,
-			                              config_append_json_array_of_strings, val);
-		}
-		simple_service_conf = NULL;
-		if (res < 0 && res != -EINPROGRESS) {
-			return res;
-		}
-	}
-	return res;
+    int res = 0;
+    char *simple_service_conf, *dyn_service_name;
+    dbus_bool_t dbus_bool;
+    struct json_object *tmp, *serv_dict;
+    const char *service_dbus_name;
+    tmp = json_object_array_get_idx(service, 0);
+    assert(tmp != NULL);
+    service_dbus_name = json_object_get_string(tmp);
+    serv_dict = json_object_array_get_idx(service, 1);
+    assert(serv_dict != NULL);
+    if (!service_dbus_name) {
+        call_return_list(NULL, "Wrong service name",
+                         "Service set properties.");
+        return -EINVAL;
+    }
+    if (!options) {
+        call_return_list(NULL, "No options provided for service "
+                         "configuration", "");
+        return -EINVAL;
+    }
+    json_object_object_foreach(options, key, val) {
+        simple_service_conf = NULL;
+        dyn_service_name = extract_dbus_short_name(service_dbus_name);
+        if (strcmp(key_serv_ipv4_config, key) == 0) {
+            json_object_object_get_ex(serv_dict, key_serv_ipv4, &tmp);
+            assert(tmp != NULL);
+            user_proof_manual_method(tmp, val);
+            res = dbus_set_property_dict(connection,
+                                         service_dbus_name, key_service_interface,
+                                         call_return_list_free, dyn_service_name,
+                                         key_serv_ipv4_config, DBUS_TYPE_STRING,
+                                         config_append_ipv4, val);
+        } else if (strcmp(key_serv_ipv6_config, key) == 0) {
+            json_object_object_get_ex(serv_dict, key_serv_ipv6, &tmp);
+            assert(tmp != NULL);
+            user_proof_manual_method(tmp, val);
+            res = dbus_set_property_dict(connection,
+                                         service_dbus_name, key_service_interface,
+                                         call_return_list_free, dyn_service_name,
+                                         key_serv_ipv6_config, DBUS_TYPE_STRING,
+                                         config_append_ipv6, val);
+        } else if (strcmp(key_serv_proxy_config, key) == 0) {
+            json_object_object_get_ex(serv_dict, key_serv_proxy, &tmp);
+            assert(tmp != NULL);
+            user_proof_manual_method(tmp, val);
+            res = dbus_set_property_dict(connection,
+                                         service_dbus_name, key_service_interface,
+                                         call_return_list_free, dyn_service_name,
+                                         key_serv_proxy_config, DBUS_TYPE_STRING,
+                                         config_append_proxy, val);
+        } else if (strcmp(key_serv_autoconnect, key) == 0) {
+            if (json_object_get_boolean(val) == TRUE) {
+                dbus_bool = TRUE;
+            } else {
+                dbus_bool = FALSE;
+            }
+            res = dbus_set_property(connection, service_dbus_name,
+                                    key_service_interface, call_return_list_free,
+                                    dyn_service_name, key_serv_autoconnect,
+                                    DBUS_TYPE_BOOLEAN, &dbus_bool);
+        } else if (strcmp(key_serv_domains_config, key) == 0) {
+            simple_service_conf = key;
+        } else if (strcmp(key_serv_nameservers_config, key) == 0) {
+            simple_service_conf = key;
+        } else if (strcmp(key_serv_timeservers_config, key) == 0) {
+            simple_service_conf = key;
+        } else {
+            char *str = strndup(key, JSON_COMMANDS_STRING_SIZE_SMALL);
+            call_return_list_free(NULL, "Unknown configuration key", str);
+            res = -EINVAL;
+        }
+        if (simple_service_conf != NULL) {
+            res = dbus_set_property_array(connection,
+                                          service_dbus_name, key_service_interface,
+                                          call_return_list_free,
+                                          dyn_service_name,
+                                          simple_service_conf, DBUS_TYPE_STRING,
+                                          config_append_json_array_of_strings, val);
+        }
+        simple_service_conf = NULL;
+        if (res < 0 && res != -EINPROGRESS) {
+            return res;
+        }
+    }
+    return res;
 }
 
 /*
@@ -494,72 +494,72 @@ int __cmd_config_service(struct json_object *service,
  */
 static DBusHandlerResult monitor_changed(DBusConnection *connection,
         DBusMessage *message, void *user_data) {
-	DBusMessageIter iter;
-	const char *interface, *path;
-	struct json_object *res, *sig_name;
-	interface = dbus_message_get_interface(message);
-	if (!interface) {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	if (strncmp(interface, "net.connman.", 12) != 0) {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	if (!strcmp(interface, key_agent_interface) ||
-	        !strcmp(interface, "net.connman.Session") ||
-	        !strcmp(interface, "net.connman.Notification")) {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	interface = strrchr(interface, '.');
-	if (interface && *interface != '\0') {
-		interface++;
-	}
-	path = strrchr(dbus_message_get_path(message), '/');
-	if (path && *path != '\0') {
-		path++;
-	}
-	if (dbus_message_is_signal(message, key_manager_interface,
-	                           key_sig_serv_changed)) {
-		sig_name = json_object_new_string(key_sig_serv_changed);
-	} else if (dbus_message_is_signal(message, key_manager_interface,
-	                                  key_sig_prop_changed)) {
-		sig_name = json_object_new_string(key_sig_prop_changed);
-	} else if (dbus_message_is_signal(message, key_manager_interface,
-	                                  key_sig_tech_added)) {
-		path = dbus_message_get_member(message);
-		sig_name = json_object_new_string(key_sig_tech_added);
-	} else if (dbus_message_is_signal(message, key_manager_interface,
-	                                  key_sig_tech_removed)) {
-		path = dbus_message_get_member(message);
-		sig_name = json_object_new_string(key_sig_tech_removed);
-	} else if (dbus_message_is_signal(message, key_service_interface,
-	                                  key_sig_prop_changed)) {
-		sig_name = json_object_new_string(key_sig_prop_changed);
-	} else if (dbus_message_is_signal(message, key_technology_interface,
-	                                  key_sig_prop_changed)) {
-		sig_name = json_object_new_string(key_sig_prop_changed);
-	} else {
-		sig_name = json_object_new_string(key_sig_unsupported);
-	}
-	dbus_message_iter_init(message, &iter);
-	res = json_object_new_object();
-	json_object_object_add(res, key_command_interface,
-	                       json_object_new_string(interface));
-	json_object_object_add(res, key_command_path,
-	                       json_object_new_string(path));
-	json_object_object_add(res, key_command_data, dbus_to_json(&iter));
-	json_object_object_add(res, key_signal, sig_name);
-	commands_signal(res);
-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    DBusMessageIter iter;
+    const char *interface, *path;
+    struct json_object *res, *sig_name;
+    interface = dbus_message_get_interface(message);
+    if (!interface) {
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    }
+    if (strncmp(interface, "net.connman.", 12) != 0) {
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    }
+    if (!strcmp(interface, key_agent_interface) ||
+            !strcmp(interface, "net.connman.Session") ||
+            !strcmp(interface, "net.connman.Notification")) {
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    }
+    interface = strrchr(interface, '.');
+    if (interface && *interface != '\0') {
+        interface++;
+    }
+    path = strrchr(dbus_message_get_path(message), '/');
+    if (path && *path != '\0') {
+        path++;
+    }
+    if (dbus_message_is_signal(message, key_manager_interface,
+                               key_sig_serv_changed)) {
+        sig_name = json_object_new_string(key_sig_serv_changed);
+    } else if (dbus_message_is_signal(message, key_manager_interface,
+                                      key_sig_prop_changed)) {
+        sig_name = json_object_new_string(key_sig_prop_changed);
+    } else if (dbus_message_is_signal(message, key_manager_interface,
+                                      key_sig_tech_added)) {
+        path = dbus_message_get_member(message);
+        sig_name = json_object_new_string(key_sig_tech_added);
+    } else if (dbus_message_is_signal(message, key_manager_interface,
+                                      key_sig_tech_removed)) {
+        path = dbus_message_get_member(message);
+        sig_name = json_object_new_string(key_sig_tech_removed);
+    } else if (dbus_message_is_signal(message, key_service_interface,
+                                      key_sig_prop_changed)) {
+        sig_name = json_object_new_string(key_sig_prop_changed);
+    } else if (dbus_message_is_signal(message, key_technology_interface,
+                                      key_sig_prop_changed)) {
+        sig_name = json_object_new_string(key_sig_prop_changed);
+    } else {
+        sig_name = json_object_new_string(key_sig_unsupported);
+    }
+    dbus_message_iter_init(message, &iter);
+    res = json_object_new_object();
+    json_object_object_add(res, key_command_interface,
+                           json_object_new_string(interface));
+    json_object_object_add(res, key_command_path,
+                           json_object_new_string(path));
+    json_object_object_add(res, key_command_data, dbus_to_json(&iter));
+    json_object_object_add(res, key_signal, sig_name);
+    commands_signal(res);
+    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
 static struct {
-	char *interface;
-	bool enabled;
+    char *interface;
+    bool enabled;
 } monitor[] = {
-	{ "Service", false },
-	{ "Technology", false },
-	{ "Manager", false },
-	{ NULL, },
+    { "Service", false },
+    { "Technology", false },
+    { "Manager", false },
+    { NULL, },
 };
 
 /*
@@ -567,42 +567,42 @@ static struct {
  * @param interface one of "Service", "Technology", "Manager"
  */
 static void monitor_add(const char *interface) {
-	bool add_filter = true, found = false;
-	int i;
-	char *rule;
-	DBusError err;
-	if (!interface) {
-		return;
-	}
-	for (i = 0; monitor[i].interface; i++) {
-		if (monitor[i].enabled == true) {
-			add_filter = false;
-		}
-		if (strncmp(interface, monitor[i].interface,
-		            JSON_COMMANDS_STRING_SIZE_SMALL) == 0) {
-			if (monitor[i].enabled == true) {
-				return;
-			}
-			monitor[i].enabled = true;
-			found = true;
-		}
-	}
-	if (found == false) {
-		return;
-	}
-	if (add_filter == true)
-		dbus_connection_add_filter(connection, monitor_changed,
-		                           NULL, NULL);
-	dbus_error_init(&err);
-	rule = malloc(JSON_COMMANDS_STRING_SIZE_MEDIUM + 1);
-	snprintf(rule, JSON_COMMANDS_STRING_SIZE_MEDIUM,
-	         "type='signal',interface='net.connman.%s'", interface);
-	rule[JSON_COMMANDS_STRING_SIZE_MEDIUM] = '\0';
-	dbus_bus_add_match(connection, rule, &err);
-	free(rule);
-	if (dbus_error_is_set(&err)) {
-		call_return_list(NULL, err.message, "");
-	}
+    bool add_filter = true, found = false;
+    int i;
+    char *rule;
+    DBusError err;
+    if (!interface) {
+        return;
+    }
+    for (i = 0; monitor[i].interface; i++) {
+        if (monitor[i].enabled == true) {
+            add_filter = false;
+        }
+        if (strncmp(interface, monitor[i].interface,
+                    JSON_COMMANDS_STRING_SIZE_SMALL) == 0) {
+            if (monitor[i].enabled == true) {
+                return;
+            }
+            monitor[i].enabled = true;
+            found = true;
+        }
+    }
+    if (found == false) {
+        return;
+    }
+    if (add_filter == true)
+        dbus_connection_add_filter(connection, monitor_changed,
+                                   NULL, NULL);
+    dbus_error_init(&err);
+    rule = malloc(JSON_COMMANDS_STRING_SIZE_MEDIUM + 1);
+    snprintf(rule, JSON_COMMANDS_STRING_SIZE_MEDIUM,
+             "type='signal',interface='net.connman.%s'", interface);
+    rule[JSON_COMMANDS_STRING_SIZE_MEDIUM] = '\0';
+    dbus_bus_add_match(connection, rule, &err);
+    free(rule);
+    if (dbus_error_is_set(&err)) {
+        call_return_list(NULL, err.message, "");
+    }
 }
 
 /*
@@ -610,42 +610,42 @@ static void monitor_add(const char *interface) {
  * @param interface one of "Service", "Technology", "Manager"
  */
 static void monitor_del(const char *interface) {
-	bool del_filter = true, found = false;
-	int i;
-	char *rule;
-	DBusError err;
-	if (!interface) {
-		return;
-	}
-	for (i = 0; monitor[i].interface; i++) {
-		if (strncmp(interface, monitor[i].interface,
-		            JSON_COMMANDS_STRING_SIZE_SMALL) == 0) {
-			if (monitor[i].enabled == false) {
-				return;
-			}
-			monitor[i].enabled = false;
-			found = true;
-		}
-		if (monitor[i].enabled == true) {
-			del_filter = false;
-		}
-	}
-	if (found == false) {
-		return;
-	}
-	dbus_error_init(&err);
-	rule = malloc(JSON_COMMANDS_STRING_SIZE_MEDIUM + 1);
-	snprintf(rule, JSON_COMMANDS_STRING_SIZE_MEDIUM,
-	         "type='signal',interface='net.connman.%s'", interface);
-	rule[JSON_COMMANDS_STRING_SIZE_MEDIUM] = '\0';
-	dbus_bus_remove_match(connection, rule, &err);
-	free(rule);
-	if (dbus_error_is_set(&err)) {
-		call_return_list(NULL, err.message, "");
-	}
-	if (del_filter == true)
-		dbus_connection_remove_filter(connection, monitor_changed,
-		                              NULL);
+    bool del_filter = true, found = false;
+    int i;
+    char *rule;
+    DBusError err;
+    if (!interface) {
+        return;
+    }
+    for (i = 0; monitor[i].interface; i++) {
+        if (strncmp(interface, monitor[i].interface,
+                    JSON_COMMANDS_STRING_SIZE_SMALL) == 0) {
+            if (monitor[i].enabled == false) {
+                return;
+            }
+            monitor[i].enabled = false;
+            found = true;
+        }
+        if (monitor[i].enabled == true) {
+            del_filter = false;
+        }
+    }
+    if (found == false) {
+        return;
+    }
+    dbus_error_init(&err);
+    rule = malloc(JSON_COMMANDS_STRING_SIZE_MEDIUM + 1);
+    snprintf(rule, JSON_COMMANDS_STRING_SIZE_MEDIUM,
+             "type='signal',interface='net.connman.%s'", interface);
+    rule[JSON_COMMANDS_STRING_SIZE_MEDIUM] = '\0';
+    dbus_bus_remove_match(connection, rule, &err);
+    free(rule);
+    if (dbus_error_is_set(&err)) {
+        call_return_list(NULL, err.message, "");
+    }
+    if (del_filter == true)
+        dbus_connection_remove_filter(connection, monitor_changed,
+                                      NULL);
 }
 
 /*
@@ -657,22 +657,22 @@ static void monitor_del(const char *interface) {
  *	}
  */
 int __cmd_monitor(struct json_object *jobj) {
-	struct json_object *tmp;
-	const char *interface;
-	int i;
-	if (json_object_object_get_ex(jobj, "monitor_add", &tmp)) {
-		for (i = 0; i < json_object_array_length(tmp); i++) {
-			interface = json_object_get_string(
-				                json_object_array_get_idx(tmp, i));
-			monitor_add(interface);
-		}
-	}
-	if (json_object_object_get_ex(jobj, "monitor_del", &tmp)) {
-		for (i = 0; i < json_object_array_length(tmp); i++) {
-			interface = json_object_get_string(
-				                json_object_array_get_idx(tmp, i));
-			monitor_del(interface);
-		}
-	}
-	return -EINPROGRESS;
+    struct json_object *tmp;
+    const char *interface;
+    int i;
+    if (json_object_object_get_ex(jobj, "monitor_add", &tmp)) {
+        for (i = 0; i < json_object_array_length(tmp); i++) {
+            interface = json_object_get_string(
+                                json_object_array_get_idx(tmp, i));
+            monitor_add(interface);
+        }
+    }
+    if (json_object_object_get_ex(jobj, "monitor_del", &tmp)) {
+        for (i = 0; i < json_object_array_length(tmp); i++) {
+            interface = json_object_get_string(
+                                json_object_array_get_idx(tmp, i));
+            monitor_del(interface);
+        }
+    }
+    return -EINPROGRESS;
 }

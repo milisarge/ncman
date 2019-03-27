@@ -30,8 +30,8 @@ extern "C" {
 #endif
 
 struct popup_actions {
-	char *key; // Button name
-	void (*func)(); // Execute on 'return'
+    char *key; // Button name
+    void (*func)(); // Execute on 'return'
 };
 
 void popup_new(int rows, int cols, int posy, int posx, char **requests,

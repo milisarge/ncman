@@ -53,84 +53,84 @@ extern struct json_object *jregex_config_service;
  * Generate json objects used for verification.
  */
 void generate_trusted_json(void) {
-	struct json_object *tmp, *opt, *arr;
-	jregex_agent_response = json_object_new_object();
-	json_object_object_add(jregex_agent_response, "Name",
-	                       json_object_new_string("^([[:print:]]+)$"));
-	json_object_object_add(jregex_agent_response, "SSID",
-	                       json_object_new_string("^([[:xdigit:]]+)$"));
-	json_object_object_add(jregex_agent_response, "Identity",
-	                       json_object_new_string("^([[:print:]]+)$"));
-	json_object_object_add(jregex_agent_response, "Passphrase",
-	                       json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(jregex_agent_response, "PreviousPassphrase",
-	                       json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(jregex_agent_response, "WPS",
-	                       json_object_new_string("^([[:digit:]]*)$"));
-	json_object_object_add(jregex_agent_response, "Username",
-	                       json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(jregex_agent_response, "Password",
-	                       json_object_new_string("^([[:print:]]*)$"));
-	jregex_agent_retry_response = json_object_new_boolean(TRUE);
-	// See commands.c __cmd_config_service for a better idea of the format.
-	jregex_config_service = json_object_new_object();
-	opt = json_object_new_object();
-	tmp = json_object_new_object();
-	json_object_object_add(tmp, key_serv_ipv4_method,
-	                       json_object_new_string("^(dhcp|manual|off)$"));
-	json_object_object_add(tmp, key_serv_ipv4_address,
-	                       json_object_new_string(IPV4_REGEX));
-	json_object_object_add(tmp, key_serv_ipv4_netmask,
-	                       json_object_new_string(IPV4_REGEX));
-	json_object_object_add(tmp, key_serv_ipv4_gateway,
-	                       json_object_new_string(IPV4_REGEX));
-	json_object_object_add(opt, key_serv_ipv4_config, tmp);
-	tmp = json_object_new_object();
-	json_object_object_add(tmp, key_serv_ipv6_method,
-	                       json_object_new_string("^(auto|manual|6to4|off)$"));
-	json_object_object_add(tmp, key_serv_ipv6_address,
-	                       json_object_new_string(IPV6_REGEX));
-	json_object_object_add(tmp, key_serv_ipv6_prefixlength,
-	                       json_object_new_int(12));
-	json_object_object_add(tmp, key_serv_ipv6_gateway,
-	                       json_object_new_string(IPV6_REGEX));
-	json_object_object_add(tmp, key_serv_ipv6_privacy,
-	                       json_object_new_string("^(auto|disabled|enabled|prefered)$"));
-	json_object_object_add(opt, key_serv_ipv6_config, tmp);
-	tmp = json_object_new_object();
-	json_object_object_add(tmp, key_serv_proxy_method,
-	                       json_object_new_string("^(direct|auto|manual)$"));
-	arr = json_object_new_array();
-	json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(tmp, key_serv_proxy_url, arr);
-	arr = json_object_new_array();
-	json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(tmp, key_serv_proxy_servers, arr);
-	arr = json_object_new_array();
-	json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(tmp, key_serv_proxy_excludes, arr);
-	json_object_object_add(opt, key_serv_proxy_config, tmp);
-	json_object_object_add(opt, key_serv_autoconnect,
-	                       json_object_new_boolean(TRUE));
-	arr = json_object_new_array();
-	json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(opt, key_serv_domains_config, arr);
-	arr = json_object_new_array();
-	json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(opt, key_serv_nameservers_config, arr);
-	arr = json_object_new_array();
-	json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
-	json_object_object_add(opt, key_serv_timeservers_config, arr);
-	json_object_object_add(jregex_config_service, key_options, opt);
-	json_object_object_add(jregex_config_service, key_service,
-	                       json_object_new_string("(%5C%5C|/|([a-zA-Z]))+"));
+    struct json_object *tmp, *opt, *arr;
+    jregex_agent_response = json_object_new_object();
+    json_object_object_add(jregex_agent_response, "Name",
+                           json_object_new_string("^([[:print:]]+)$"));
+    json_object_object_add(jregex_agent_response, "SSID",
+                           json_object_new_string("^([[:xdigit:]]+)$"));
+    json_object_object_add(jregex_agent_response, "Identity",
+                           json_object_new_string("^([[:print:]]+)$"));
+    json_object_object_add(jregex_agent_response, "Passphrase",
+                           json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(jregex_agent_response, "PreviousPassphrase",
+                           json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(jregex_agent_response, "WPS",
+                           json_object_new_string("^([[:digit:]]*)$"));
+    json_object_object_add(jregex_agent_response, "Username",
+                           json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(jregex_agent_response, "Password",
+                           json_object_new_string("^([[:print:]]*)$"));
+    jregex_agent_retry_response = json_object_new_boolean(TRUE);
+    // See commands.c __cmd_config_service for a better idea of the format.
+    jregex_config_service = json_object_new_object();
+    opt = json_object_new_object();
+    tmp = json_object_new_object();
+    json_object_object_add(tmp, key_serv_ipv4_method,
+                           json_object_new_string("^(dhcp|manual|off)$"));
+    json_object_object_add(tmp, key_serv_ipv4_address,
+                           json_object_new_string(IPV4_REGEX));
+    json_object_object_add(tmp, key_serv_ipv4_netmask,
+                           json_object_new_string(IPV4_REGEX));
+    json_object_object_add(tmp, key_serv_ipv4_gateway,
+                           json_object_new_string(IPV4_REGEX));
+    json_object_object_add(opt, key_serv_ipv4_config, tmp);
+    tmp = json_object_new_object();
+    json_object_object_add(tmp, key_serv_ipv6_method,
+                           json_object_new_string("^(auto|manual|6to4|off)$"));
+    json_object_object_add(tmp, key_serv_ipv6_address,
+                           json_object_new_string(IPV6_REGEX));
+    json_object_object_add(tmp, key_serv_ipv6_prefixlength,
+                           json_object_new_int(12));
+    json_object_object_add(tmp, key_serv_ipv6_gateway,
+                           json_object_new_string(IPV6_REGEX));
+    json_object_object_add(tmp, key_serv_ipv6_privacy,
+                           json_object_new_string("^(auto|disabled|enabled|prefered)$"));
+    json_object_object_add(opt, key_serv_ipv6_config, tmp);
+    tmp = json_object_new_object();
+    json_object_object_add(tmp, key_serv_proxy_method,
+                           json_object_new_string("^(direct|auto|manual)$"));
+    arr = json_object_new_array();
+    json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(tmp, key_serv_proxy_url, arr);
+    arr = json_object_new_array();
+    json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(tmp, key_serv_proxy_servers, arr);
+    arr = json_object_new_array();
+    json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(tmp, key_serv_proxy_excludes, arr);
+    json_object_object_add(opt, key_serv_proxy_config, tmp);
+    json_object_object_add(opt, key_serv_autoconnect,
+                           json_object_new_boolean(TRUE));
+    arr = json_object_new_array();
+    json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(opt, key_serv_domains_config, arr);
+    arr = json_object_new_array();
+    json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(opt, key_serv_nameservers_config, arr);
+    arr = json_object_new_array();
+    json_object_array_add(arr, json_object_new_string("^([[:print:]]*)$"));
+    json_object_object_add(opt, key_serv_timeservers_config, arr);
+    json_object_object_add(jregex_config_service, key_options, opt);
+    json_object_object_add(jregex_config_service, key_service,
+                           json_object_new_string("(%5C%5C|/|([a-zA-Z]))+"));
 }
 
 /*
  * Free the json objects.
  */
 void free_trusted_json(void) {
-	json_object_put(jregex_agent_response);
-	json_object_put(jregex_agent_retry_response);
-	json_object_put(jregex_config_service);
+    json_object_put(jregex_agent_response);
+    json_object_put(jregex_agent_retry_response);
+    json_object_put(jregex_config_service);
 }
