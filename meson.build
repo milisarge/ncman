@@ -4,22 +4,30 @@ project('ncman', 'c',
   default_options: 'c_std=c99'
 )
 
-version_array = meson.project_version().split('.')
-
 cc = meson.get_compiler('c')
 
-## libs
-dbus =		  dependency('dbus-1')
-json =		  dependency('json-c')
-ncurses =	  dependency('ncurses')
-formw =		  dependency('formw')
-menuw =		  dependency('menuw')
-build_dependencies = [dbus, ncurses, json, formw, menuw]
-
 ## flags
-flags = [
+cflags = [
  '-Wall'
 ]
+
+version_array = meson.project_version().split('.')
+
+## libs
+dbus =       dependency('dbus-1')
+json =       dependency('json-c')
+
+# prefer wide ncurses library
+ncurses =    cc.find_library('ncursesw', required: false)
+if ncurses.found()
+  cflags += ['-DENABLE_UNICODE']
+else
+  ncurses =  cc.find_library('ncurses') # failed if not exist
+endif
+
+formw =      dependency('formw')
+menuw =      dependency('menuw')
+build_dependencies = [dbus, ncurses, json, formw, menuw]
 
 ## defines
 defines = [
@@ -28,7 +36,7 @@ defines = [
   '-DVERSION_PATCH=@0@'.format(version_array[2])
 ]
 
-flags = cc.get_supported_arguments(flags)
+cflags = cc.get_supported_arguments(cflags)
 
 sources = files(
   'src/agent.c',
@@ -56,7 +64,7 @@ executable(
   sources,
   install: true,
   dependencies: build_dependencies,
-  c_args: defines + flags,
+  c_args: defines + cflags,
   include_directories: inc
 )
 

@@ -1,8 +1,7 @@
-/*
- *  connman-ncurses
+/*  ncman (originally connman-ncurses)
  *
+ *  Copyright (C) 2019 l4rzy. All rights reversved.
  *  Copyright (C) 2014 Eurogiciel. All rights reserved.
- *  Copyright (C) 2018 l4rzy
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +31,10 @@
 #include <dbus/dbus.h>
 #include <signal.h>
 #include <assert.h>
+
+#ifdef ENABLE_UNICODE
 #include <locale.h>
+#endif
 
 #include "engine.h"
 #include "loop.h"
@@ -1578,7 +1580,9 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+#ifdef ENABLE_UNICODE
 	setlocale(LC_ALL, "");
+#endif
 
 	struct sigaction sig_int, sig_winch;
 
